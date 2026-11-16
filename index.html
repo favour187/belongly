@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Belongly — Nobody Should Have to Start Over Alone</title>
+<meta name="description" content="Belongly matches newcomers anywhere in the world with a verified local buddy, a First-30-Days journey, and a community that answers back.">
+<style>
+:root{--ink:#14231c;--muted:#64756b;--bg:#edf7f6;--card:#fff;--green:#0f766e;--green2:#14b8a6;--mint:#ccfbf1;--lime:#f0fdfa;--amber:#d97706;--amber-bg:#fef3c7;--red:#dc2626;--line:#cbe7e2;--shadow:0 8px 26px rgba(20,90,50,.12);--r:18px}
+*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+button{font:inherit;cursor:pointer;border:none}input,select,textarea{font:inherit;padding:.65rem .8rem;border:1.5px solid #dfe7e1;border-radius:11px;background:#fff;width:100%}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--green2);border-color:transparent}
+label{font-size:.83rem;font-weight:700;display:block;margin-bottom:.3rem}
+.btn{display:inline-block;background:var(--green);color:#fff;font-weight:700;padding:.65rem 1.25rem;border-radius:999px;transition:.2s;box-shadow:0 4px 12px rgba(20,122,69,.3)}
+.btn:hover{background:#115e59;transform:translateY(-1px)}.btn.light{background:var(--mint);color:var(--green);box-shadow:none}.btn.ghost{background:#fff;color:var(--green);border:2px solid var(--green);box-shadow:none}.btn.small{padding:.42rem .9rem;font-size:.88rem}.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.tag{font-size:.7rem;font-weight:800;padding:.16rem .55rem;border-radius:999px;background:var(--mint);color:var(--green);white-space:nowrap}
+.tag.amber{background:var(--amber-bg);color:var(--amber)}.tag.grey{background:#eef2ee;color:#5b6b60}.tag.blue{background:#dbeafe;color:#1d4ed8}
+/* App shell */
+.app{display:grid;grid-template-columns:250px 1fr;min-height:100vh}
+aside{background:#03211e;color:#e7f5ec;padding:1.3rem 1.1rem;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:.4rem;overflow:auto}
+.logo{font-size:1.5rem;font-weight:900;color:#fff;margin-bottom:.2rem}.logo span{color:#2dd4bf}
+aside .tagline{font-size:.8rem;color:#9dc8ab;margin-bottom:1.2rem}
+.navbtn{display:flex;gap:.6rem;align-items:center;width:100%;text-align:left;background:transparent;color:#cfe8d8;padding:.65rem .8rem;border-radius:12px;font-weight:600}
+.navbtn:hover{background:#0a3530}.navbtn.active{background:var(--green);color:#fff}
+aside .who{margin-top:auto;background:#0a3530;border-radius:14px;padding:.9rem;font-size:.85rem}
+aside .who b{color:#fff}
+main{padding:1.4rem clamp(1rem,3vw,2.2rem) 3rem;max-width:1180px;width:100%;margin:0 auto}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:1.2rem}
+.topbar h1{font-size:clamp(1.4rem,3vw,2rem);letter-spacing:-.02em}
+.view{display:none}.view.active{display:block;animation:fade .25s ease}
+@keyframes fade{from{opacity:0;transform:translateY(5px)}to{opacity:1}}
+.hero{background:linear-gradient(120deg,#03211e,#0f766e);color:#fff;border-radius:24px;padding:1.7rem;margin-bottom:1.2rem;position:relative;overflow:hidden}
+.hero h2{font-size:clamp(1.5rem,3.4vw,2.2rem);line-height:1.12;letter-spacing:-.02em;max-width:620px}
+.hero p{color:#cdeeda;max-width:600px;margin:.6rem 0 1rem}
+.hero .globe{position:absolute;right:-10px;top:50%;transform:translateY(-50%);font-size:7rem;opacity:.28}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-bottom:1.2rem}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:1rem;box-shadow:var(--shadow)}
+.stat b{font-size:1.55rem;display:block;color:var(--green)}.stat small{color:var(--muted);font-weight:600}.stat a{font-size:.72rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(265px,1fr));gap:1.1rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:1.15rem;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:.5rem}
+.card h3{font-size:1.03rem;line-height:1.3}.meta{font-size:.85rem;color:var(--muted)}.tags{display:flex;gap:.35rem;flex-wrap:wrap}
+.avatar{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font-size:1.35rem;font-weight:900;color:#fff;flex:none}
+.score{font-size:1.25rem;font-weight:900;color:var(--green)}.scorebar{height:8px;background:#e8f0ea;border-radius:99px;overflow:hidden}.scorebar i{display:block;height:100%;background:linear-gradient(90deg,var(--green2),#2dd4bf)}
+.why{font-size:.8rem;background:var(--lime);border-radius:10px;padding:.55rem .7rem;color:#134e4a}
+.twocol{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem}@media(max-width:860px){.twocol{grid-template-columns:1fr}.app{grid-template-columns:1fr}aside{position:static;height:auto;flex-direction:row;flex-wrap:wrap;align-items:center}aside .who{display:none}.navbtn{width:auto}}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:1.4rem;box-shadow:var(--shadow)}
+.quest{display:flex;gap:.7rem;align-items:flex-start;padding:.7rem;border:1px solid #e6efe8;border-radius:13px;margin-bottom:.55rem;background:#fbfefc}
+.quest input{width:auto;margin-top:.3rem;transform:scale(1.25)}
+.quest.done{opacity:.62}.quest.done b{text-decoration:line-through}
+.progress{height:14px;background:#e8f0ea;border-radius:99px;overflow:hidden}.progress i{display:block;height:100%;background:linear-gradient(90deg,var(--green),#2dd4bf);transition:width .4s}
+.checks{display:flex;flex-wrap:wrap;gap:.45rem}.checks label{display:flex;gap:.35rem;align-items:center;background:#f2f8f3;border:1.5px solid var(--line);padding:.35rem .7rem;border-radius:999px;font-size:.85rem;cursor:pointer;margin:0}.checks input{width:auto}
+.feed{display:flex;flex-direction:column;gap:.6rem}.feed .item{background:#fbfefc;border:1px solid #e6efe8;border-radius:13px;padding:.75rem .9rem;font-size:.9rem}
+.overlay{position:fixed;inset:0;background:rgba(10,30,20,.62);display:none;place-items:center;z-index:100;padding:1rem}.overlay.open{display:grid}
+.modal{background:#fff;border-radius:22px;max-width:460px;width:100%;padding:1.6rem;max-height:90vh;overflow:auto}
+#toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,130px);background:var(--ink);color:#fff;padding:.85rem 1.35rem;border-radius:999px;font-weight:600;z-index:200;transition:.35s;max-width:92vw;text-align:center}#toast.show{transform:translate(-50%,0)}
+.safe{background:var(--mint);border-radius:15px;padding:1.05rem}.safe b{color:#115e59;display:block;margin-bottom:.25rem}.safe p{font-size:.9rem;color:#134e4a}
+footer{color:var(--muted);font-size:.87rem;border-top:1px solid var(--line);margin-top:2.2rem;padding-top:1.2rem}
+.pillrow{display:flex;gap:.45rem;flex-wrap:wrap;margin-bottom:1rem}.pill{background:#fff;border:1.5px solid #dfe7e1;padding:.42rem .9rem;border-radius:999px;font-weight:600;font-size:.87rem}.pill.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+  /* --- Belongly professional polish (Teal + Coral) --- */
+  body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  .logo span{color:#ff7a66}
+  .btn{background:#0f766e;box-shadow:0 6px 18px rgba(15,118,110,.28)}
+  .btn:hover{background:#0b5e57}
+  .navbtn{border-radius:10px;letter-spacing:.01em}
+  .navbtn.active{background:#0f766e;box-shadow:inset 3px 0 0 #ff7a66}
+  .card,.panel,.stat{border-radius:16px;box-shadow:0 2px 10px rgba(3,33,30,.06),0 14px 34px rgba(3,33,30,.07)}
+  .card{transition:transform .18s ease,box-shadow .18s ease}
+  .card:hover{transform:translateY(-3px);box-shadow:0 6px 16px rgba(3,33,30,.08),0 20px 40px rgba(3,33,30,.12)}
+  .hero{background:linear-gradient(125deg,#03211e 0%,#0f766e 62%,#14919b 100%);border-radius:20px}
+  .hero .btn.light{background:#ff7a66;color:#fff;box-shadow:0 6px 18px rgba(0,0,0,.22)}
+  input,select,textarea{border-radius:10px}
+  input:focus,select:focus,textarea:focus{outline:2px solid #14b8a6;outline-offset:1px}
+  h1,h2,h3{letter-spacing:-.02em}
+  .score{color:#0f766e}.tag{background:#ccfbf1;color:#115e59}
+  ::selection{background:#99f6e4}
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- SIDEBAR -->
+  <aside>
+    <div><div class="logo">🌱 Root<span>ed</span></div><div class="tagline">Nobody should have to start over alone.</div></div>
+    <button class="navbtn active" data-view="dash">🏠 Dashboard</button>
+    <button class="navbtn" data-view="profile">👤 My Profile</button>
+    <button class="navbtn" data-view="people">👥 People & Connections</button>
+    <button class="navbtn" data-view="buddy">🤝 Find My Buddy</button>
+    <button class="navbtn" data-view="journey">🗺️ First-30-Days Journey</button>
+    <button class="navbtn" data-view="ask">💬 Ask a Local</button>
+    <button class="navbtn" data-view="circles">⭕ Connection Circles</button>
+    <button class="navbtn" data-view="safety">🛡️ Safety & Trust</button>
+    <div class="who" id="sidebarWho" onclick="go('profile')" style="cursor:pointer"><b>No profile yet</b><br>Tap to create yours<br><span style="color:#2dd4bf">● It takes 1 minute</span></div>
+  </aside>
+
+  <main>
+    <div class="topbar">
+      <h1 id="pageTitle">Welcome to Belongly 👋</h1>
+      <button class="btn" onclick="go('buddy')">Find My Buddy →</button>
+    </div>
+
+    <!-- DASHBOARD -->
+    <section class="view active" id="view-dash">
+      <div class="hero"><div class="globe">🌍</div>
+        <h2>You moved. Your people haven't found you yet. Let's fix that.</h2>
+        <p>Belongly is for the <b>1 in 6 people worldwide who feel lonely</b> (WHO, 2025) — newcomers, migrants, refugees, exchange & new students. We match you with a verified local buddy, then walk your first 30 days <i>together</i>.</p>
+        <button class="btn light" onclick="go('journey')">Continue My Journey — Day 9</button>
+      </div>
+      <div class="stats">
+        <div class="stat"><b>1 in 6</b><small>people globally feel lonely</small><br><a href="https://www.who.int/news/item/30-06-2025-social-connection-linked-to-improved-heath-and-reduced-risk-of-early-death" target="_blank" rel="noopener">WHO Commission on Social Connection, 2025</a></div>
+        <div class="stat"><b>281M</b><small>international migrants worldwide</small><br><a href="https://inee.org/collections/forced-displacement" target="_blank" rel="noopener">UN / UNHCR Global Trends</a></div>
+        <div class="stat"><b>117M</b><small>people forcibly displaced</small><br><a href="https://inee.org/collections/forced-displacement" target="_blank" rel="noopener">UNHCR, 2023</a></div>
+        <div class="stat"><b id="liveMatches">12,408</b><small>buddy matches made on Belongly (demo)</small></div>
+      </div>
+      <div class="twocol">
+        <div class="panel">
+          <h3>🌱 Your journey at a glance</h3>
+          <p class="meta" style="margin:.4rem 0 .7rem"><span id="dashProgressText">0 of 12 quests complete</span> — finish quests with your buddy to earn Points & badges.</p>
+          <div class="progress"><i id="dashProgress" style="width:0%"></i></div>
+          <div id="dashBadges" style="margin-top:.8rem;display:flex;gap:.4rem;flex-wrap:wrap"></div>
+          <button class="btn small" style="margin-top:1rem" onclick="go('journey')">Open Journey →</button>
+        </div>
+        <div class="panel">
+          <h3>🌍 Happening now on Belongly</h3>
+          <div class="feed" id="liveFeed" style="margin-top:.7rem"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BUDDY MATCH -->
+    <section class="view" id="view-buddy">
+      <div class="panel" style="margin-bottom:1.2rem">
+        <h3>⚙️ My matching profile — edit me, watch scores change live</h3>
+        <p class="meta" style="margin:.3rem 0 1rem">Our algorithm is transparent: <b>same city/school (35pts) + shared languages (up to 30pts) + shared interests (up to 25pts) + both free this week (10pts)</b>. No black box — you'll always see <i>why</i> someone was matched to you.</p>
+        <div class="twocol" style="gap:1rem">
+          <div><label for="myCity">I'm new to…</label>
+            <select id="myCity"><option>Toronto</option><option>Toronto</option><option>Berlin</option><option>New York</option><option>Madrid</option><option>Sydney</option><option>Nairobi</option><option>Lagos</option></select></div>
+          <div><label>Languages I speak</label><div class="checks" id="myLangs"></div></div>
+        </div>
+        <div style="margin-top:.8rem"><label>Things I love</label><div class="checks" id="myInterests"></div></div>
+      </div>
+      <div class="pillrow" id="buddyFilter">
+        <button class="pill active" data-f="">Everyone near me</button>
+        <button class="pill" data-f="free">Free this week</button>
+        <button class="pill" data-f="90">90%+ match</button>
+      </div>
+      <div class="grid" id="buddyGrid"></div>
+    </section>
+
+    <!-- JOURNEY -->
+    <section class="view" id="view-journey">
+      <div class="panel" style="margin-bottom:1.2rem">
+        <h3>🗺️ The First-30-Days Journey</h3>
+        <p class="meta" style="margin:.3rem 0 .8rem">Research on settling-in shows belonging comes from small wins, shared with someone. Complete each quest <b>with your buddy</b> — tick them off, earn Points 🌱, unlock badges.</p>
+        <div class="progress"><i id="jProgress" style="width:0%"></i></div>
+        <p style="font-weight:800;margin-top:.5rem"><span id="jText">0%</span> · <span id="jRoots">0</span> Points earned</p>
+      </div>
+      <div id="questList"></div>
+    </section>
+
+    <!-- ASK A LOCAL -->
+    <section class="view" id="view-ask">
+      <div class="twocol">
+        <div>
+          <div class="pillrow" id="askFilter">
+            <button class="pill active" data-f="">All questions</button><button class="pill" data-f="School">🎒 School</button><button class="pill" data-f="Getting Around">🚌 Getting Around</button><button class="pill" data-f="Food & Culture">🍲 Food & Culture</button><button class="pill" data-f="Making Friends">🧑‍🤝‍🧑 Making Friends</button>
+          </div>
+          <div class="feed" id="askList"></div>
+        </div>
+        <div class="panel">
+          <h3>Ask anything. A local will answer.</h3>
+          <p class="meta" style="margin:.3rem 0 1rem">No question is too small — "where do I buy a bus pass?" is exactly what buddies are for.</p>
+          <form id="askForm">
+            <div style="margin-bottom:.8rem"><label for="qText">Your question</label><textarea id="qText" rows="3" required placeholder="e.g. How do I join a football team at my new school?"></textarea></div>
+            <div style="margin-bottom:.8rem"><label for="qCat">Category</label><select id="qCat"><option>School</option><option>Getting Around</option><option>Food & Culture</option><option>Making Friends</option></select></div>
+            <div style="margin-bottom:1rem"><label for="qCity">City</label><input id="qCity" placeholder="e.g. Toronto" required></div>
+            <button class="btn" style="width:100%" type="submit">Post Question 💬</button>
+          </form>
+          <p class="meta" style="margin-top:.8rem">🛡️ Questions are public but anonymous by first name. Never share your address or school timetable publicly — see Safety.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CIRCLES -->
+    <section class="view" id="view-circles">
+      <p class="meta" style="margin-bottom:1rem;max-width:640px">Small groups (max 12) that meet in public places around one shared love. Joining a Circle is the fastest way to go from "I know one person" to "I have my people".</p>
+      <div class="grid" id="circleGrid"></div>
+    </section>
+
+    <!-- MY PROFILE -->
+    <section class="view" id="view-profile">
+      <div class="twocol">
+        <div class="panel">
+          <h3>👤 My Profile — this is really you</h3>
+          <p class="meta" style="margin:.3rem 0 1rem">Saved on this device. This is how people find and connect with you. Safety tip: use your first name + last initial, and only share your school if you're happy for members to see it.</p>
+          <form id="profileForm">
+            <div class="twocol" style="gap:.8rem">
+              <div style="margin-bottom:.8rem"><label for="pName">Your name</label><input id="pName" required placeholder="e.g. Amara"></div>
+              <div style="margin-bottom:.8rem"><label for="pRole">I am a…</label><select id="pRole"><option>Newcomer</option><option>Buddy (I can help newcomers)</option><option>Both — new here, and I can help too</option></select></div>
+            </div>
+            <div style="margin-bottom:.8rem"><label for="pSchool">School I attend / attended</label><input id="pSchool" placeholder="e.g. West High School, Community Grammar School…"></div>
+            <div class="twocol" style="gap:.8rem">
+              <div style="margin-bottom:.8rem"><label for="pCity">City I live in now</label><input id="pCity" required placeholder="e.g. Toronto"></div>
+              <div style="margin-bottom:.8rem"><label for="pFrom">City / country I'm from (optional)</label><input id="pFrom" placeholder="e.g. Lagos, Nigeria"></div>
+            </div>
+            <div style="margin-bottom:.8rem"><label>Languages I speak</label><div class="checks" id="pLangs"></div></div>
+            <div style="margin-bottom:.8rem"><label>Things I love</label><div class="checks" id="pInterests"></div></div>
+            <div style="margin-bottom:.8rem"><label for="pBio">About me</label><textarea id="pBio" rows="3" placeholder="A sentence or two — what should a new friend know about you?"></textarea></div>
+            <div class="twocol" style="gap:.8rem">
+              <div style="margin-bottom:.8rem"><label for="pLooking">I'm looking for…</label><select id="pLooking"><option>A buddy in my new city</option><option>People from my school</option><option>People who speak my language</option><option>New friends with my interests</option><option>People I can help as a buddy</option></select></div>
+              <div style="margin-bottom:.8rem"><label for="pFree">Availability</label><select id="pFree"><option value="true">Free to meet this week</option><option value="false">Busy this week — message me</option></select></div>
+            </div>
+            <label style="display:flex;gap:.5rem;align-items:flex-start;font-weight:500;margin-bottom:1rem"><input type="checkbox" id="pShowSchool" checked style="width:auto;margin-top:.25rem"><span>Show my school on my public profile (helps schoolmates find you — untick to keep it private)</span></label>
+            <button class="btn" type="submit" style="width:100%">Save My Profile 🌱</button>
+          </form>
+        </div>
+        <div>
+          <div class="panel" style="margin-bottom:1.2rem">
+            <h3>How others see you</h3>
+            <div id="myPublicCard" style="margin-top:.8rem"></div>
+          </div>
+          <div class="panel">
+            <h3>🔗 Share me — my Belongly Code</h3>
+            <p class="meta" style="margin:.4rem 0 .8rem">Give this code to a real friend, schoolmate or newcomer. When they paste it under <b>People → Add by Belongly Code</b>, your profile appears in their directory and they can connect with you.</p>
+            <button class="btn light" id="copyCodeBtn" style="width:100%">Copy My Belongly Code</button>
+            <p class="meta" id="codeHint" style="margin-top:.6rem">Save your profile first, then copy your code.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PEOPLE & CONNECTIONS -->
+    <section class="view" id="view-people">
+      <div class="panel" style="margin-bottom:1.2rem">
+        <h3>🔗 Add a real person by Belongly Code</h3>
+        <p class="meta" style="margin:.3rem 0 .8rem">Someone gave you their code? Paste it here — their real profile joins your directory instantly.</p>
+        <form id="importForm" style="display:flex;gap:.6rem;flex-wrap:wrap"><input id="importCode" placeholder="Paste a Belongly Code (starts with BELONGLY:)" style="flex:1;min-width:220px" required><button class="btn" type="submit">Add Person</button></form>
+      </div>
+      <div class="panel" style="margin-bottom:1.2rem">
+        <h3>💚 My Connections</h3>
+        <div id="incomingBox" style="margin-top:.7rem"></div>
+        <div class="feed" id="connectionList" style="margin-top:.7rem"></div>
+      </div>
+      <input id="peopleSearch" type="search" placeholder="Search by name, school, city or language… e.g. try your school" style="margin-bottom:1rem">
+      <div class="grid" id="peopleGrid"></div>
+    </section>
+
+    <!-- SAFETY -->
+    <section class="view" id="view-safety">
+      <h2 style="margin-bottom:.4rem">🛡️ Safety is the product</h2>
+      <p class="meta" style="margin-bottom:1.2rem;max-width:660px">Connecting minors and newcomers with new people only works with serious guardrails. These are enforced in the design, not hidden in terms & conditions.</p>
+      <div class="grid">
+        <div class="safe"><b>✅ Verified buddies only</b><p>Buddies are verified through a member school, university, library or community organisation. No verification, no matching.</p></div>
+        <div class="safe"><b>📍 Public first meetings</b><p>First meetups are suggested only in public places (library, school, café, community centre) — never homes, never cars.</p></div>
+        <div class="safe"><b>🔒 No private data needed</b><p>First names + city only. No home address, no phone number, no school timetable is ever required or shown.</p></div>
+        <div class="safe"><b>🚨 One-tap report & block</b><p>Every profile, question and Circle has report/block. Reports from minors are prioritised and reviewed by the verifying organisation.</p></div>
+        <div class="safe"><b>👀 Trusted-adult visibility</b><p>For under-18s, a parent/guardian or school mentor can view buddy matches and first-meetup plans.</p></div>
+        <div class="safe"><b>🌐 Moderated in your language</b><p>Ask-a-Local is moderated per city, with community moderators for the main local languages.</p></div>
+      </div>
+      <div class="panel" style="margin-top:1.2rem">
+        <h3>The global need, in one paragraph</h3>
+        <p style="margin-top:.5rem">The WHO Commission on Social Connection (June 2025) found <b>1 in 6 people worldwide feels lonely</b>, linked to an estimated <b>871,000 deaths a year</b>, with the highest rates among teenagers (17–21% of 13–29-year-olds) and in lower-income countries. At the same time <b>281 million people live outside their country of birth</b> and <b>117.3 million were forcibly displaced</b> (UNHCR) — before counting the millions of students who simply change school, city or neighbourhood every year. Belongly doesn't try to "cure loneliness" with an app. It does one concrete thing: <b>it makes sure nobody faces their first 30 days somewhere new, alone.</b></p>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- CHAT MODAL -->
+<div class="overlay" id="chatOverlay"><div class="modal">
+  <h3 id="cTitle">Chat</h3><p class="meta">Messages are saved on this device. Meet in public first — never share your home address.</p>
+  <div id="chatBox" style="display:flex;flex-direction:column;gap:.5rem;max-height:300px;overflow:auto;margin:1rem 0"></div>
+  <form id="chatForm" style="display:flex;gap:.6rem"><input id="chatInput" placeholder="Write a kind message…" required><button class="btn" type="submit">Send</button></form>
+  <button class="btn ghost" id="cClose" style="width:100%;margin-top:.8rem">Close</button>
+</div></div>
+
+<!-- MATCH MODAL -->
+<div class="overlay" id="overlay"><div class="modal">
+  <h3 id="mTitle">Say hello 👋</h3><p id="mMeta" class="meta" style="margin:.4rem 0"></p>
+  <div class="why" id="mWhy"></div>
+  <p style="font-size:.92rem;margin:1rem 0 .5rem"><b>Suggested first meetup (public & safe):</b></p>
+  <p class="meta" id="mMeet"></p>
+  <textarea id="mMsg" rows="3" style="margin-top:.8rem">Hi! I'm new here and Belongly matched us. Would you like to do the "Find our favourite lunch spot" quest together this week?</textarea>
+  <div style="display:flex;gap:.6rem;margin-top:1rem"><button class="btn" id="mSend" style="flex:1">Send Hello 💚</button><button class="btn ghost" id="mClose">Close</button></div>
+</div></div>
+<div id="toast"></div>
+
+<script>
+const $=id=>document.getElementById(id);
+function toast(m){const t=$("toast");t.textContent=m;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),3400)}
+/* Navigation */
+const titles={dash:"Welcome to Belongly 👋",profile:"My Profile 👤",people:"People & Connections 👥",buddy:"Find My Buddy 🤝",journey:"First-30-Days Journey 🗺️",ask:"Ask a Local 💬",circles:"Connection Circles ⭕",safety:"Safety & Trust 🛡️"};
+function go(v){document.querySelectorAll(".view").forEach(s=>s.classList.remove("active"));$("view-"+v).classList.add("active");document.querySelectorAll(".navbtn").forEach(b=>b.classList.toggle("active",b.dataset.view===v));$("pageTitle").textContent=titles[v];window.scrollTo({top:0,behavior:"smooth"})}
+document.querySelectorAll(".navbtn").forEach(b=>b.onclick=()=>go(b.dataset.view));
+
+/* Data */
+const LANGS=["English","Yoruba","Spanish","Ukrainian","Arabic","French","Mandarin","Portuguese"];
+const INTERESTS=["Football","Music","Coding","Art","Food","Books","Gaming","Faith & Culture"];
+const COLORS=["#0f766e","#d97706","#2563eb","#db2777","#7c3aed","#0891b2","#dc2626","#4d7c0f"];
+let buddies=[
+ {name:"Sofia",city:"Toronto",country:"United Kingdom",langs:["English","Spanish"],ints:["Art","Books","Food"],free:true,verified:"West High School",bio:"Moved here from Manchester at 13 — I remember everything about being new."},
+ {name:"Liam",city:"Toronto",country:"Canada",langs:["English","French"],ints:["Football","Gaming","Music"],free:true,verified:"Toronto Public Library",bio:"Born here, buddying for 2 years. I know every pitch and library in the west end."},
+ {name:"Mateo",city:"Toronto",country:"United States",langs:["English","Spanish"],ints:["Football","Music","Food"],free:false,verified:"Roosevelt High",bio:"Exchange student last year, now I help new students the way mine helped me."},
+ {name:"Olena",city:"Berlin",country:"Germany",langs:["Ukrainian","English"],ints:["Books","Art","Coding"],free:true,verified:"Berlin Welcome Centre",bio:"Arrived from Ukraine in 2023. I help newcomers with school enrolment and German paperwork."},
+ {name:"Carlos",city:"Madrid",country:"Spain",langs:["Spanish","Portuguese","English"],ints:["Football","Food","Music"],free:true,verified:"Madrid Youth Council",bio:"Your first friend in Madrid. Warning: I will feed you."},
+ {name:"Aisha",city:"Lagos",country:"Nigeria",langs:["English","Yoruba"],ints:["Coding","Music","Books"],free:true,verified:"Lagos Coding Club",bio:"New to Lagos? I'll show you the best study spots and where the jollof is undefeated."},
+ {name:"Jack",city:"Sydney",country:"Australia",langs:["English","Mandarin"],ints:["Gaming","Football","Coding"],free:false,verified:"Sydney City Library",bio:"Migrated at 10. Now I run the Saturday gaming circle for new students."},
+ {name:"Wanjiru",city:"Nairobi",country:"Kenya",langs:["English"],ints:["Art","Faith & Culture","Food"],free:true,verified:"Nairobi Community Arts",bio:"Karibu Nairobi! Art walks, matatu survival guide, and the best chai spots."}
+];
+let my={city:"Toronto",langs:["English","Yoruba"],ints:["Football","Music","Coding"]};
+
+/* Profile editor */
+function buildChecks(el,items,selected,key){el.innerHTML=items.map(i=>`<label><input type="checkbox" value="${i}" ${selected.includes(i)?"checked":""} onchange="togglePref('${key}','${i}',this.checked)"> ${i}</label>`).join("")}
+function togglePref(key,val,on){if(on&&!my[key].includes(val))my[key].push(val);if(!on)my[key]=my[key].filter(x=>x!==val);renderBuddies()}
+$("myCity").onchange=e=>{my.city=e.target.value;renderBuddies()};
+
+/* Matching algorithm — transparent scoring */
+function score(b){
+  let pts=0,why=[];
+  if(b.city===my.city){pts+=35;why.push(`📍 Both in ${b.city} (+35)`)}else{why.push(`🌍 Different city — online buddy (+0)`)}
+  const sharedL=b.langs.filter(l=>my.langs.includes(l));const lp=Math.min(30,sharedL.length*15);pts+=lp;if(sharedL.length)why.push(`🗣️ Shared language: ${sharedL.join(", ")} (+${lp})`);
+  const sharedI=b.ints.filter(i=>my.ints.includes(i));const ip=Math.min(25,sharedI.length*9);pts+=ip;if(sharedI.length)why.push(`💚 You both love: ${sharedI.join(", ")} (+${ip})`);
+  if(b.free){pts+=10;why.push("📅 Free this week (+10)")}
+  return {pts:Math.min(98,pts),why};
+}
+let buddyMode="";
+function renderBuddies(){
+  buildChecks($("myLangs"),LANGS,my.langs,"langs");buildChecks($("myInterests"),INTERESTS,my.ints,"ints");
+  let list=buddies.map(b=>({...b,s:score(b)})).sort((a,b)=>b.s.pts-a.s.pts);
+  if(buddyMode==="free")list=list.filter(b=>b.free);if(buddyMode==="90")list=list.filter(b=>b.s.pts>=80);
+  $("buddyGrid").innerHTML=list.length?list.map((b,i)=>`
+   <article class="card">
+     <div style="display:flex;gap:.8rem;align-items:center"><div class="avatar" style="background:${COLORS[i%COLORS.length]}">${b.name[0]}</div>
+       <div><h3>${b.name} · ${b.city}</h3><div class="meta">${b.country} · Buddy since 2025</div></div>
+       <div style="margin-left:auto;text-align:right"><div class="score">${b.s.pts}%</div><div class="meta">match</div></div></div>
+     <div class="scorebar"><i style="width:${b.s.pts}%"></i></div>
+     <p style="font-size:.92rem">${b.bio}</p>
+     <div class="tags">${b.langs.map(l=>`<span class="tag blue">${l}</span>`).join("")}${b.ints.map(x=>`<span class="tag">${x}</span>`).join("")}</div>
+     <div class="tags"><span class="tag ${b.free?"":"grey"}">${b.free?"📅 Free this week":"📅 Busy this week"}</span><span class="tag amber">✅ Verified · ${b.verified}</span></div>
+     <div class="why">${b.s.why.join("<br>")}</div>
+     <button class="btn small" onclick="openMatch('${b.name}')">Say Hello →</button>
+   </article>`).join(""):`<p class="meta">No buddies match that filter yet — try widening your languages or interests.</p>`;
+}
+$("buddyFilter").addEventListener("click",e=>{if(e.target.tagName!=="BUTTON")return;document.querySelectorAll("#buddyFilter .pill").forEach(p=>p.classList.remove("active"));e.target.classList.add("active");buddyMode=e.target.dataset.f;renderBuddies()});
+
+/* Match modal */
+let currentBuddy=null;
+function openMatch(name){currentBuddy=buddies.find(b=>b.name===name);const s=score(currentBuddy);
+ $("mTitle").textContent=`Say hello to ${currentBuddy.name} 👋`;$("mMeta").textContent=`${currentBuddy.city}, ${currentBuddy.country} · ✅ Verified by ${currentBuddy.verified}`;
+ $("mWhy").innerHTML=`<b>${s.pts}% match because:</b><br>`+s.why.join("<br>");
+ $("mMeet").textContent=currentBuddy.city===my.city?`📍 ${currentBuddy.city} Public Library, main hall — Saturday 11am. A librarian/mentor is present. Bring nothing but yourself.`:"💻 Video call inside Belongly (30 min, camera optional) — then plan an in-person quest when you're in the same city.";
+ $("overlay").classList.add("open")}
+$("mClose").onclick=()=>$("overlay").classList.remove("open");
+$("overlay").addEventListener("click",e=>{if(e.target===$("overlay"))$("overlay").classList.remove("open")});
+$("mSend").onclick=()=>{$("overlay").classList.remove("open");let m=parseInt($("liveMatches").dataset.v||12408)+1;$("liveMatches").dataset.v=m;$("liveMatches").textContent=m.toLocaleString();toast(`💚 Hello sent to ${currentBuddy.name}! Buddies usually reply within a day. Quest unlocked: say hello in person.`)};
+
+/* Journey */
+const WEEKS=[["Week 1 · Land Softly",[["Say hello to your buddy in person","Meet in a public place, swap one story each."],["Find your safe places","Library, school office, community centre — pin them together."],["Eat lunch with someone new","Buddy introduces you to their table/group. No eating alone by Friday."]]],["Week 2 · Learn the Ropes",[["Master one journey","Bus, train or walk route — do it together once, solo the second time."],["Join one club or Circle","Anything. Football, coding, art — one session, no commitment."],["Ask a Local, get an answer","Post one 'silly' question. (There are none.)"]]],["Week 3 · Find Your People",[["Attend one Circle meetup","Small group, shared interest, public place."],["Teach your buddy something","A phrase, a recipe, a song from home. Belonging grows both ways."],["Help the next newcomer","Answer one Ask-a-Local question from your experience."]]],["Week 4 · Feel At Home",[["Your favourite place quest","Take your buddy to the place here that finally feels like yours."],["Celebration meal","Cook or share a dish from home together. Food = belonging."],["Write your 'Advice to Day-1 Me'","Posted (anonymously) to help the next person who lands here."]]]];
+let done=new Set(JSON.parse(localStorage.getItem("rooted_done")||"[]"));
+function renderJourney(){let html="",idx=0,total=0;
+ WEEKS.forEach(([wk,qs])=>{html+=`<h3 style="margin:1rem 0 .6rem">${wk}</h3>`;qs.forEach(([t,d])=>{const id=idx++;total++;html+=`<div class="quest ${done.has(id)?"done":""}"><input type="checkbox" ${done.has(id)?"checked":""} onchange="toggleQuest(${id},this.checked)"><div><b>${t}</b> <span class="tag">+10 Points 🌱</span><br><span class="meta">${d}</span></div></div>`})});
+ $("questList").innerHTML=html;const pct=Math.round(done.size/12*100);const roots=done.size*10;
+ $("jProgress").style.width=pct+"%";$("dashProgress").style.width=pct+"%";$("jText").textContent=pct+"% complete ("+done.size+"/12)";$("jRoots").textContent=roots;$("dashProgressText").textContent=`${done.size} of 12 quests complete · ${roots} Points earned`;
+ const badges=[];if(done.size>=1)badges.push("🌱 First Step");if(done.size>=3)badges.push("🧭 Week 1 Done");if(done.size>=6)badges.push("🤝 Ropes Learned");if(done.size>=9)badges.push("⭕ Circle Regular");if(done.size>=12)badges.push("🌳 Fully Belongly");
+ $("dashBadges").innerHTML=badges.length?badges.map(b=>`<span class="tag">${b}</span>`).join(""):`<span class="meta">Complete quests to earn badges</span>`}
+function toggleQuest(id,on){on?done.add(id):done.delete(id);localStorage.setItem("rooted_done",JSON.stringify([...done]));renderJourney();if(on)toast("🌱 Quest complete! +10 Points. Do the next one with your buddy.")}
+
+/* Ask a Local */
+let asks=[
+ {q:"I just moved to Toronto — how do student bus passes actually work?",cat:"Getting Around",city:"Toronto",answers:3,helpful:14,by:"Amara"},
+ {q:"What's the fastest way to make friends at a new school without being awkward?",cat:"Making Friends",city:"Berlin",answers:6,helpful:31,by:"Olena"},
+ {q:"Where can I find ingredients for home food in Madrid? Missing home already.",cat:"Food & Culture",city:"Madrid",answers:4,helpful:19,by:"Santiago"},
+ {q:"New school, new everything — which clubs are friendliest to total beginners?",cat:"School",city:"Sydney",answers:5,helpful:22,by:"Jack"}];
+let askMode="";
+function renderAsks(){const list=asks.filter(a=>!askMode||a.cat===askMode);
+ $("askList").innerHTML=list.map((a,i)=>`<div class="item"><div class="tags" style="margin-bottom:.35rem"><span class="tag">${a.cat}</span><span class="tag blue">📍 ${a.city}</span></div><b>${a.q}</b><div class="meta">Asked by ${a.by} · ${a.answers} answers</div><div style="display:flex;gap:.5rem;margin-top:.55rem"><button class="btn small light" onclick="helpful(this)">👍 Helpful (${a.helpful})</button><button class="btn small ghost" onclick="answerQ(this)">💬 Answer</button></div><div class="answerbox" style="display:none;margin-top:.6rem"><input placeholder="Write a kind, useful answer…"><button class="btn small" style="margin-top:.45rem" onclick="postAnswer(this)">Post answer</button></div></div>`).join("")||`<p class="meta">Nothing here yet — ask the first question!</p>`}
+function helpful(b){b.textContent=b.textContent.replace(/\d+/,m=>+m+1);toast("👍 Marked helpful — kindness compounds.")}
+function answerQ(b){const box=b.closest(".item").querySelector(".answerbox");box.style.display=box.style.display==="none"?"block":"none"}
+function postAnswer(b){const item=b.closest(".item");const v=item.querySelector("input").value.trim();if(!v)return;item.querySelector(".meta").textContent=item.querySelector(".meta").textContent.replace(/\d+ answers/,m=>(parseInt(m)+1)+" answers");b.closest(".answerbox").style.display="none";toast("💬 Answer posted! You just became someone's local.")}
+$("askFilter").addEventListener("click",e=>{if(e.target.tagName!=="BUTTON")return;document.querySelectorAll("#askFilter .pill").forEach(p=>p.classList.remove("active"));e.target.classList.add("active");askMode=e.target.dataset.f;renderAsks()});
+$("askForm").addEventListener("submit",e=>{e.preventDefault();asks.unshift({q:$("qText").value.trim(),cat:$("qCat").value,city:$("qCity").value.trim(),answers:0,helpful:0,by:"You"});e.target.reset();askMode="";document.querySelectorAll("#askFilter .pill").forEach((p,i)=>p.classList.toggle("active",i===0));renderAsks();toast("💬 Question posted! Locals in your city will be notified.")});
+
+/* Circles */
+let circles=[
+ {e:"⚽",name:"Saturday 5-a-Side",city:"Toronto",members:9,when:"Saturdays · Riverdale Park"},
+ {e:"💻",name:"New Coders Circle",city:"Toronto + Online",members:11,when:"Wednesdays · Public Library / online"},
+ {e:"🎨",name:"Sketch & Chai",city:"Nairobi",members:7,when:"Sundays · Community Arts Centre"},
+ {e:"🎵",name:"Music From Home",city:"Berlin + Online",members:10,when:"Fridays · Welcome Centre / online"},
+ {e:"🍲",name:"Cook Your Country",city:"Madrid",members:8,when:"Monthly · Youth Council kitchen"},
+ {e:"📚",name:"Two-Language Book Club",city:"Sydney + Online",members:6,when:"Fortnightly · City Library / online"}];
+function renderCircles(){$("circleGrid").innerHTML=circles.map((c,i)=>`<article class="card"><div style="font-size:2rem">${c.e}</div><h3>${c.name}</h3><div class="meta">📍 ${c.city}<br>🗓️ ${c.when}</div><div class="tags"><span class="tag">${c.members}/12 members</span><span class="tag amber">Public meetup</span></div><button class="btn small ${c.joined?"light":""}" ${c.joined?"disabled":""} onclick="joinCircle(${i})">${c.joined?"✅ Joined — see you there!":"Join Circle"}</button></article>`).join("")}
+function joinCircle(i){circles[i].joined=true;circles[i].members++;renderCircles();toast(`⭕ Welcome to ${circles[i].name}! First meetup details are in your Journey.`)}
+
+/* ===== REAL PROFILES, PEOPLE & CONNECTIONS ===== */
+const PKEY="rooted_profile_v1",CKEY="rooted_connections_v1",SKEY="rooted_sent_v1",IKEY="rooted_imported_v1",CHKEY="rooted_chats_v1";
+let myProfile=JSON.parse(localStorage.getItem(PKEY)||"null");
+let connections=new Set(JSON.parse(localStorage.getItem(CKEY)||"[]"));
+let sentReq=new Set(JSON.parse(localStorage.getItem(SKEY)||"[]"));
+let imported=JSON.parse(localStorage.getItem(IKEY)||"[]");
+let chats=JSON.parse(localStorage.getItem(CHKEY)||"{}");
+let incoming=[{name:"Sofia",note:"Sofia saw you're new to Toronto and wants to be your buddy."},{name:"Liam",note:"Liam goes to a Toronto school and loves football too."}];
+function saveSet(k,s){localStorage.setItem(k,JSON.stringify([...s]))}
+function allPeople(){
+  const seed=buddies.map(b=>({name:b.name,city:b.city,from:b.country,school:b.verified,langs:b.langs,ints:b.ints,bio:b.bio,role:"Buddy",free:b.free,source:"Member"}));
+  const me=myProfile?[{name:myProfile.name,city:myProfile.city,from:myProfile.from||"—",school:myProfile.showSchool?myProfile.school:"School kept private",langs:myProfile.langs,ints:myProfile.ints,bio:myProfile.bio||"This is you!",role:myProfile.role,free:myProfile.free,source:"You",isMe:true}]:[];
+  return [...me,...imported,...seed];
+}
+function personCard(p,i){
+  const status=p.isMe?`<span class="tag">This is you — as others see you</span>`:connections.has(p.name)?`<button class="btn small light" onclick="openChat('${p.name.replace(/'/g,"\\'")}')">💬 Message</button> <span class="tag">Connected 💚</span>`:sentReq.has(p.name)?`<span class="tag">Request sent — waiting ⏳</span>`:`<button class="btn small" onclick="connectPerson('${p.name.replace(/'/g,"\\'")}')">+ Connect</button>`;
+  return `<article class="card"><div style="display:flex;gap:.8rem;align-items:center"><div class="avatar" style="background:${COLORS[i%COLORS.length]}">${(p.name||"?")[0]}</div><div><h3>${p.name}</h3><div class="meta">${p.role||"Member"} · 📍 ${p.city}${p.from&&p.from!=="—"?" · from "+p.from:""}</div></div></div>
+  <div class="meta">🏫 ${p.school||"School not shared"}</div><p style="font-size:.92rem">${p.bio||""}</p>
+  <div class="tags">${(p.langs||[]).map(l=>`<span class="tag blue">${l}</span>`).join("")}${(p.ints||[]).map(x=>`<span class="tag">${x}</span>`).join("")}</div>
+  <div class="tags"><span class="tag ${p.free?"":"grey"}">${p.free?"📅 Free this week":"📅 Message me"}</span><span class="tag amber">${p.source==="You"?"Your profile":p.source==="Imported"?"Added by Belongly Code":"Member"}</span></div>
+  <div>${status}</div></article>`;
+}
+function renderPeople(){
+  const q=($("peopleSearch").value||"").toLowerCase();
+  const list=allPeople().filter(p=>(p.name+" "+p.city+" "+(p.school||"")+" "+(p.langs||[]).join(" ")+" "+(p.ints||[]).join(" ")).toLowerCase().includes(q));
+  $("peopleGrid").innerHTML=list.length?list.map(personCard).join(""):`<p class="meta">No one matches that search yet — be the first from your school: create your profile!</p>`;
+  $("incomingBox").innerHTML=incoming.length?incoming.map((r,i)=>`<div class="item" style="background:#f2f8f3;border:1px solid var(--line);border-radius:13px;padding:.75rem .9rem;margin-bottom:.55rem"><b>${r.name}</b> wants to connect<br><span class="meta">${r.note}</span><div style="display:flex;gap:.5rem;margin-top:.5rem"><button class="btn small" onclick="acceptReq(${i})">Accept 💚</button><button class="btn small ghost" onclick="declineReq(${i})">Not now</button></div></div>`).join(""):"";
+  const mine=allPeople().filter(p=>connections.has(p.name));
+  $("connectionList").innerHTML=mine.length?mine.map(p=>`<div class="item"><b>${p.name}</b> · ${p.city} · 🏫 ${p.school||""}<br><button class="btn small light" style="margin-top:.4rem" onclick="openChat('${p.name.replace(/'/g,"\\'")}')">💬 Message ${p.name.split(" ")[0]}</button></div>`).join(""):`<p class="meta">No connections yet. Connect with someone below, accept a request above, or share your Belongly Code with a real person.</p>`;
+}
+function connectPerson(name){sentReq.add(name);saveSet(SKEY,sentReq);renderPeople();toast(`💚 Connection request sent to ${name}. When they accept, you can message and plan a public first meetup.`)}
+function acceptReq(i){const r=incoming.splice(i,1)[0];connections.add(r.name);saveSet(CKEY,connections);renderPeople();toast(`💚 You're now connected with ${r.name}! Say hello — your first Journey quest just got easier.`)}
+function declineReq(i){incoming.splice(i,1);renderPeople();toast("Request dismissed. You can always connect later from the directory.")}
+$("peopleSearch").addEventListener("input",renderPeople);
+/* Chat */
+let chatWith=null;
+function openChat(name){chatWith=name;$("cTitle").textContent="💬 Chat with "+name;renderChat();$("chatOverlay").classList.add("open")}
+function renderChat(){const msgs=chats[chatWith]||[];$("chatBox").innerHTML=msgs.length?msgs.map(m=>`<div style="align-self:${m.me?"flex-end":"flex-start"};background:${m.me?"var(--green)":"#eef2ee"};color:${m.me?"#fff":"var(--ink)"};padding:.55rem .8rem;border-radius:14px;max-width:82%;font-size:.92rem">${m.text}</div>`).join(""):`<p class="meta">No messages yet. Start kindly: introduce yourself and suggest a public first meetup quest.</p>`;$("chatBox").scrollTop=1e6}
+$("cClose").onclick=()=>$("chatOverlay").classList.remove("open");
+$("chatOverlay").addEventListener("click",e=>{if(e.target===$("chatOverlay"))$("chatOverlay").classList.remove("open")});
+$("chatForm").addEventListener("submit",e=>{e.preventDefault();const v=$("chatInput").value.trim();if(!v)return;(chats[chatWith]=chats[chatWith]||[]).push({me:true,text:v});localStorage.setItem(CHKEY,JSON.stringify(chats));e.target.reset();renderChat();
+  setTimeout(()=>{if(!connections.has(chatWith))return;(chats[chatWith]=chats[chatWith]||[]).push({me:false,text:"Hi! Thanks for messaging — I'd love to. Shall we do a Journey quest together this week? Public library, Saturday morning? 🌱"});localStorage.setItem(CHKEY,JSON.stringify(chats));if(chatWith&&$("chatOverlay").classList.contains("open"))renderChat()},900)});
+/* Profile form */
+function buildProfileChecks(){
+  const L=myProfile?myProfile.langs:["English"],I=myProfile?myProfile.ints:[];
+  $("pLangs").innerHTML=LANGS.map(l=>`<label><input type="checkbox" value="${l}" ${L.includes(l)?"checked":""}> ${l}</label>`).join("");
+  $("pInterests").innerHTML=INTERESTS.map(x=>`<label><input type="checkbox" value="${x}" ${I.includes(x)?"checked":""}> ${x}</label>`).join("");
+}
+function syncMatchingFromProfile(){if(!myProfile)return;my.city=myProfile.city;my.langs=myProfile.langs.length?myProfile.langs:["English"];my.ints=myProfile.ints;$("myCity").value=[...$("myCity").options].some(o=>o.value===my.city)?my.city:$("myCity").value;renderBuddies()}
+function renderMyPublic(){
+  if(!myProfile){$("myPublicCard").innerHTML=`<p class="meta">No profile yet — fill the form and you'll appear in the People directory, in BuddyMatch, and get your Belongly Code.</p>`;$("sidebarWho").innerHTML=`<b>No profile yet</b><br>Tap to create yours<br><span style="color:#2dd4bf">● It takes 1 minute</span>`;return}
+  $("myPublicCard").innerHTML=personCard(allPeople()[0],0);
+  $("sidebarWho").innerHTML=`<b>${myProfile.name}</b><br>${myProfile.role}<br>📍 ${myProfile.city}${myProfile.school?"<br>🏫 "+(myProfile.showSchool?myProfile.school:"School private"):""}<br><span style="color:#2dd4bf">● Profile live — tap to edit</span>`;
+  $("codeHint").textContent="Your code copies your public profile card (name, school if shown, city, languages, interests). Share it only with people you want to connect with.";
+  const dashTitle=$("pageTitle");if(document.querySelector(".navbtn.active")?.dataset.view==="dash")dashTitle.textContent="Welcome back, "+myProfile.name.split(" ")[0]+" 👋";
+}
+$("profileForm").addEventListener("submit",e=>{e.preventDefault();
+  myProfile={name:$("pName").value.trim(),role:$("pRole").value,school:$("pSchool").value.trim(),city:$("pCity").value.trim(),from:$("pFrom").value.trim(),langs:[...$("pLangs").querySelectorAll("input:checked")].map(i=>i.value),ints:[...$("pInterests").querySelectorAll("input:checked")].map(i=>i.value),bio:$("pBio").value.trim(),looking:$("pLooking").value,free:$("pFree").value==="true",showSchool:$("pShowSchool").checked};
+  localStorage.setItem(PKEY,JSON.stringify(myProfile));renderMyPublic();syncMatchingFromProfile();renderPeople();toast("🌱 Profile saved — you're live! Find yourself in People & Connections.");go("people")});
+function loadProfileIntoForm(){if(!myProfile){buildProfileChecks();return}
+  $("pName").value=myProfile.name;$("pRole").value=myProfile.role;$("pSchool").value=myProfile.school||"";$("pCity").value=myProfile.city;$("pFrom").value=myProfile.from||"";$("pBio").value=myProfile.bio||"";$("pLooking").value=myProfile.looking||"A buddy in my new city";$("pFree").value=String(myProfile.free);$("pShowSchool").checked=myProfile.showSchool!==false;buildProfileChecks()}
+$("copyCodeBtn").onclick=async()=>{if(!myProfile){toast("Save your profile first, then copy your Belongly Code.");go("profile");return}
+  const pubP={name:myProfile.name,city:myProfile.city,from:myProfile.from,school:myProfile.showSchool?myProfile.school:"School kept private",langs:myProfile.langs,ints:myProfile.ints,bio:myProfile.bio,role:myProfile.role,free:myProfile.free,source:"Imported"};
+  const code="BELONGLY:"+btoa(unescape(encodeURIComponent(JSON.stringify(pubP))));
+  try{await navigator.clipboard.writeText(code);toast("🔗 Belongly Code copied! Send it to a real person — they paste it in People to connect with you.")}catch{prompt("Copy your Belongly Code:",code)}};
+$("importForm").addEventListener("submit",e=>{e.preventDefault();const raw=$("importCode").value.trim();
+  try{const p=JSON.parse(decodeURIComponent(escape(atob(raw.replace(/^(BELONGLY|ROOTED):/,"")))));p.source="Imported";if(!p.name||!p.city)throw 0;imported.unshift(p);localStorage.setItem(IKEY,JSON.stringify(imported));e.target.reset();renderPeople();toast(`💚 ${p.name} added to your directory! Hit + Connect on their card.`)}catch{toast("⚠️ That code doesn't look right — ask them to copy their Belongly Code again.")}});
+
+/* Live feed */
+const FEED=["Sofia in Toronto matched with Amara — 94% match","Olena answered 'bus passes in Berlin' · marked helpful ×12","New Circle: Cook Your Country · Madrid (8/12)","Jack completed Week 4 — Fully Belongly 🌳","Player in Nairobi joined Sketch & Chai","A buddy in Toronto requested at Toronto Library"];
+$("liveFeed").innerHTML=FEED.map(f=>`<div class="item">🌱 ${f}</div>`).join("");
+
+renderBuddies();renderJourney();renderAsks();renderCircles();loadProfileIntoForm();renderMyPublic();syncMatchingFromProfile();renderPeople();
+</script>
+</body>
+</html>
