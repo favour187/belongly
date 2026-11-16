@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#03211e">
 <title>Belongly — Nobody Should Have to Start Over Alone</title>
 <meta name="description" content="Belongly matches newcomers anywhere in the world with a verified local buddy, a First-30-Days journey, and a community that answers back.">
 <style>
@@ -110,13 +111,68 @@ footer{color:var(--muted);font-size:.87rem;border-top:1px solid var(--line);marg
     h1{font-size:1.35rem}
   }
   @media (hover:none){ .card:hover{transform:none} }
+
+  /* ===== Professional mobile system v2 ===== */
+  .mainnav{display:contents}
+  .featWrap{display:grid;grid-template-columns:92px 1.5fr auto 1.2fr;gap:1.1rem;align-items:center}
+  .featAvatar{width:92px!important;height:92px!important;font-size:2.1rem!important;background:#0f766e}
+  .featBtns{display:flex;gap:.6rem;margin-top:.8rem;flex-wrap:wrap}
+  .ringBox{position:relative;width:104px;height:104px;flex:none}
+  .ringLabel{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .ringLabel b{font-size:1.3rem;line-height:1} .ringLabel small{color:var(--muted);font-size:.68rem;font-weight:700}
+  *{-webkit-tap-highlight-color:transparent} button{touch-action:manipulation}
+  @media (max-width:860px){
+    aside{flex-direction:column;align-items:stretch;flex-wrap:nowrap;overflow:visible;padding:.8rem .9rem .55rem;gap:.55rem}
+    aside>div:first-child{display:flex;align-items:center;justify-content:space-between}
+    .logo{font-size:1.35rem!important}
+    .mainnav{display:flex;gap:.4rem;overflow-x:auto;padding-bottom:.35rem;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+    .mainnav::-webkit-scrollbar{display:none}
+    .navbtn{flex:0 0 auto;min-height:40px;padding:.5rem .8rem;font-size:.86rem;border-radius:999px;background:#0a3530}
+    .navbtn.active{background:#0f766e;box-shadow:inset 0 -3px 0 #ff7a66}
+    .topbar{gap:.6rem} .topbar h1{font-size:1.28rem}
+    .topbar>.btn{display:none}
+    #dashWelcome{font-size:1.55rem!important}
+    .featWrap{grid-template-columns:72px 1fr;gap:.9rem}
+    .featAvatar{width:72px!important;height:72px!important;font-size:1.7rem!important}
+    .featBtns{display:grid;grid-template-columns:1fr 1fr;width:100%}
+    .featBtns .btn{min-height:46px;display:grid;place-items:center}
+    .ringBox{grid-column:1/-1;justify-self:center;width:96px;height:96px}
+    .ringBox svg{width:96px;height:96px}
+    .featWhyWrap{grid-column:1/-1}
+    .panel h3{font-size:1.12rem;line-height:1.3}
+    .card h3{font-size:1rem}
+    .checks label{min-height:42px;align-items:center}
+    .quest input{width:22px;height:22px;flex:none}
+    .overlay{align-items:flex-end;padding:0}
+    .overlay .modal{width:100%;max-height:94vh;border-radius:20px 20px 0 0;padding:1.15rem 1.15rem calc(1.15rem + env(safe-area-inset-bottom))}
+    .pills,.pillrow{gap:.4rem}
+    #weekStepper{gap:.2rem}
+    .feed .item,.note{font-size:.92rem}
+  }
+  @media (max-width:380px){
+    .featBtns{grid-template-columns:1fr}
+    .stats{grid-template-columns:1fr 1fr}
+  }
+
+  @media (max-width:860px){
+    .app{grid-template-columns:minmax(0,1fr)}
+    aside,main{min-width:0;max-width:100vw}
+    .mainnav{max-width:100%;min-width:0}
+  }
+
+  @media (max-width:860px){
+    #dashWelcome{display:none}
+    .featBtns .btn{display:flex;align-items:center;justify-content:center;gap:.4rem}
+    .ringLabel small{font-size:.62rem;letter-spacing:.04em}
+  }
 </style>
 </head>
 <body>
 <div class="app">
   <!-- SIDEBAR -->
   <aside>
-    <div><div class="logo">🌱 Root<span>ed</span></div><div class="tagline">Nobody should have to start over alone.</div></div>
+    <div><div class="logo">🌱 Belong<span>ly</span></div><div class="tagline">Belong. Connect. Thrive.</div></div>
+    <nav class="mainnav">
     <button class="navbtn active" data-view="dash">🏠 Dashboard</button>
     <button class="navbtn" data-view="profile">👤 My Profile</button>
     <button class="navbtn" data-view="people">👥 People & Connections</button>
@@ -125,6 +181,7 @@ footer{color:var(--muted);font-size:.87rem;border-top:1px solid var(--line);marg
     <button class="navbtn" data-view="ask">💬 Ask a Local</button>
     <button class="navbtn" data-view="circles">⭕ Connection Circles</button>
     <button class="navbtn" data-view="safety">🛡️ Safety & Trust</button>
+    </nav>
     <div class="who" id="sidebarWho" onclick="go('profile')" style="cursor:pointer"><b>No profile yet</b><br>Tap to create yours<br><span style="color:#2dd4bf">● It takes 1 minute</span></div>
   </aside>
 
@@ -140,22 +197,22 @@ footer{color:var(--muted);font-size:.87rem;border-top:1px solid var(--line);marg
       <h2 style="font-size:clamp(1.6rem,3.6vw,2.3rem);margin-bottom:1.2rem" id="dashWelcome">Welcome! 👋</h2>
 
       <div class="panel" style="margin-bottom:1.1rem">
-        <div style="display:flex;gap:1.1rem;flex-wrap:wrap;align-items:center">
-          <div class="avatar" id="featAvatar" style="width:92px;height:92px;font-size:2.2rem;background:#0f766e">?</div>
-          <div style="flex:1;min-width:210px">
+        <div class="featWrap">
+          <div class="avatar featAvatar" id="featAvatar">?</div>
+          <div class="featInfo">
             <div style="color:#e85d4f;font-weight:800;font-size:.75rem;letter-spacing:.08em">YOUR TOP BUDDY MATCH</div>
             <h3 id="featName" style="font-size:1.45rem;margin:.2rem 0">Finding your match…</h3>
             <div class="meta" id="featMeta"></div>
-            <div style="display:flex;gap:.6rem;margin-top:.8rem;flex-wrap:wrap">
+            <div class="featBtns">
               <button class="btn ghost small" id="featMsg">💬 Message</button>
               <button class="btn small" id="featConnect" style="background:#e85d4f;box-shadow:0 6px 16px rgba(232,93,79,.35)">🤝 Connect</button>
             </div>
           </div>
-          <div style="text-align:center">
+          <div class="ringBox">
             <svg width="104" height="104" viewBox="0 0 104 104"><circle cx="52" cy="52" r="44" fill="none" stroke="#e6f2ef" stroke-width="10"/><circle id="featRing" cx="52" cy="52" r="44" fill="none" stroke="#0f766e" stroke-width="10" stroke-linecap="round" stroke-dasharray="276" stroke-dashoffset="276" transform="rotate(-90 52 52)"/></svg>
-            <div style="margin-top:-72px;font-size:1.35rem;font-weight:900" id="featScore">–</div><div class="meta" style="font-size:.75rem">Compatibility</div>
+            <div class="ringLabel"><b id="featScore">–</b><small>Match</small></div>
           </div>
-          <div style="flex:1;min-width:210px">
+          <div class="featWhyWrap">
             <b style="font-size:.92rem">Why you're a great match</b>
             <div id="featWhy" style="display:flex;flex-direction:column;gap:.4rem;margin-top:.5rem"></div>
           </div>
@@ -164,7 +221,7 @@ footer{color:var(--muted);font-size:.87rem;border-top:1px solid var(--line);marg
 
       <div class="panel" style="margin-bottom:1.1rem">
         <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.6rem">
-          <b>🌱 Your First-30-Days Journey</b><a href="#" onclick="go('journey');return false;" style="font-weight:700;font-size:.9rem">View my journey →</a>
+          <b>🌱 Your First-30-Days Journey</b><a href="#" onclick="go('journey');return false;" style="font-weight:700;font-size:.9rem;color:#0f766e">View my journey →</a>
         </div>
         <div id="weekStepper" style="display:grid;grid-template-columns:repeat(4,1fr);gap:.4rem;margin-top:1.1rem;text-align:center"></div>
         <div class="progress" style="margin-top:1rem"><i id="dashProgress" style="width:0%"></i></div>
@@ -336,11 +393,11 @@ footer{color:var(--muted);font-size:.87rem;border-top:1px solid var(--line);marg
   <p style="font-size:.92rem;margin:1rem 0 .5rem"><b>Suggested first meetup (public & safe):</b></p>
   <p class="meta" id="mMeet"></p>
   <div style="background:#f0fdfa;border:1.5px solid #99f6e4;border-radius:14px;padding:.85rem;margin-top:.9rem">
-    <b style="font-size:.9rem">✨ AI Icebreaker + Phrase Card</b> <span class="tag" style="margin-left:.3rem">Backboard-ready</span>
+    <b style="font-size:.9rem">✨ AI Icebreaker + Phrase Card</b> <span class="tag" style="margin-left:.3rem">Built-in · AI optional</span>
     <p class="meta" id="mIce" style="margin:.4rem 0"></p>
     <div id="mPhrases" style="display:flex;flex-direction:column;gap:.3rem;font-size:.88rem"></div>
     <button class="btn small light" id="mUseIce" style="margin-top:.6rem">Use this hello ↓</button>
-    <button class="btn small" id="mAiBtn" style="margin-top:.6rem;margin-left:.4rem">✨ Generate with Backboard AI</button>
+    <button class="btn small" id="mAiBtn" style="margin-top:.6rem;margin-left:.4rem">✨ Try a smarter hello (AI)</button>
     <p class="meta" id="mAiStatus" style="margin-top:.45rem;font-size:.78rem"></p>
   </div>
   <textarea id="mMsg" rows="3" style="margin-top:.8rem">Hi! I'm new here and Belongly matched us. Would you like to do the "Find our favourite lunch spot" quest together this week?</textarea>
@@ -462,9 +519,9 @@ async function generateWithBackboard(b, s){
     status.textContent="✅ Live AI (Backboard) — review it, edit anything, then Send Hello.";
     toast("✨ Backboard AI generated your hello!");
   }catch(e){
-    status.textContent="Built-in hello is ready below — live AI is unavailable right now (Backboard LLM credits may still need activating), so nothing is blocked.";
+    status.textContent="Using Belongly's built-in hello — it's ready below and works fully. (Live AI isn't enabled on this deployment right now.)";
     toast("Built-in hello ready — live AI unavailable, fallback used 🌱");
-  }finally{ btn.disabled=false; btn.textContent="✨ Generate with Backboard AI"; }
+  }finally{ btn.disabled=false; btn.textContent="✨ Try a smarter hello (AI)"; }
 }
 function renderFeatured(){
   const ranked=buddies.map(b=>({...b,s:score(b)})).sort((a,b)=>b.s.pts-a.s.pts);const b=ranked[0];if(!b)return;
