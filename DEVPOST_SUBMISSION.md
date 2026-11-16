@@ -23,12 +23,13 @@ Belongly is a web app that makes sure nobody faces their first 30 days alone. It
 **Safety is the product:** verified buddies only (via schools/libraries/community orgs) · public first meetings only · first names + city only, no private data · one-tap report & block · trusted-adult visibility for under-18s · per-city moderation.
 
 ## How We Built It
-A single-page web app in **HTML, CSS and vanilla JavaScript** (zero dependencies, no build step): a sidebar app shell with six views (Dashboard, Find My Buddy, Journey, Ask a Local, Circles, Safety); a live matching engine that scores and ranks buddies from editable user preferences with a full score breakdown; a quest system with progress + badges persisted in `localStorage`; a working Q&A board (post, answer, helpful votes, category filters); joinable Circles with live member counts; and a simulated global activity feed. Fully responsive and mobile-first, because newcomers live on their phones.
+A full-stack web app: **frontend** in HTML/CSS/vanilla JavaScript on Cloudflare Pages, plus a **dedicated backend service** (`belongly-api`, a Cloudflare Worker with its own URL, source in `backend/`) that calls the **Groq AI API** (`openai/gpt-oss-20b`) server-side for personalised icebreakers and phrase cards — the API key is held only as a Cloudflare secret. A Pages Function mirrors the endpoint as fallback, and a built-in phrase engine is the final fallback. The single-page frontend provides: a sidebar app shell with six views (Dashboard, Find My Buddy, Journey, Ask a Local, Circles, Safety); a live matching engine that scores and ranks buddies from editable user preferences with a full score breakdown; a quest system with progress + badges persisted in `localStorage`; a working Q&A board (post, answer, helpful votes, category filters); joinable Circles with live member counts; and a simulated global activity feed. Fully responsive and mobile-first, because newcomers live on their phones.
 
 ## Tools & Resources Used
 - HTML5, CSS3, vanilla JavaScript (state, rendering, localStorage)
 - AI assistant (Arena AI) — see disclosure below
-- Sponsor resource identified for the live-AI upgrade: Backboard.io Unified API ($10 participant credits, code SPARKATHON) — integration is designed (server-side via Cloudflare Worker) and the feature already works with a built-in phrase engine, so the demo never depends on an API key
+- Cloudflare Pages (frontend hosting) + Cloudflare Workers (dedicated backend, `belongly-api`) + Groq AI API (live icebreaker/phrase generation, key server-side only)
+- Sponsor resources available to the team include Backboard.io ($10 credits, code SPARKATHON), Momen, Gen.xyz and Boot.dev via CSC — optional; the shipped AI path uses Groq behind our own backend
 - Statistics & sources: WHO Commission on Social Connection global report (June 30, 2025, who.int); UN/UNHCR Global Trends — international migrants & forced displacement (inee.org/collections/forced-displacement, UNHCR)
 - No external libraries/APIs. All demo profiles, questions and feed items are fictional.
 

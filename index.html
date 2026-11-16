@@ -504,23 +504,30 @@ function generateIcebreaker(b,s){
 /* Live AI via /api/icebreaker (Cloudflare Pages Function -> Backboard). Falls back to built-in engine. */
 async function generateWithBackboard(b, s){
   const status=$("mAiStatus"), btn=$("mAiBtn");
-  btn.disabled=true; btn.textContent="✨ Generating…"; status.textContent="Asking Backboard AI for a personalised hello…";
+  btn.disabled=true; btn.textContent="✨ Generating…"; status.textContent="Asking the Belongly backend (Groq AI) for a personalised hello…";
+  const payload={buddyName:b.name,city:b.city,myName:myProfile?myProfile.name:"",language:buddyPhraseLang(b),
+    sharedInterests:b.ints.filter(i=>my.ints.includes(i)),score:s.pts};
+  const endpoints=["https://belongly-api.favprojects.workers.dev/api/icebreaker","/api/icebreaker"];
+  let d=null,lastErr="";
+  for(const ep of endpoints){
+    try{
+      const ctrl=new AbortController(); const to=setTimeout(()=>ctrl.abort(),22000);
+      const r=await fetch(ep,{method:"POST",headers:{"Content-Type":"application/json"},signal:ctrl.signal,body:JSON.stringify(payload)});
+      clearTimeout(to);
+      const j=await r.json().catch(()=>({}));
+      if(r.ok&&j.ok){d=j;break} lastErr=j.error||("http_"+r.status);
+    }catch(e){ lastErr="network"; }
+  }
   try{
-    const ctrl=new AbortController(); const to=setTimeout(()=>ctrl.abort(),20000);
-    const r=await fetch("/api/icebreaker",{method:"POST",headers:{"Content-Type":"application/json"},signal:ctrl.signal,
-      body:JSON.stringify({buddyName:b.name,city:b.city,myName:myProfile?myProfile.name:"",language:buddyPhraseLang(b),
-        sharedInterests:b.ints.filter(i=>my.ints.includes(i)),score:s.pts})});
-    clearTimeout(to);
-    const d=await r.json().catch(()=>({}));
-    if(!r.ok||!d.ok) throw new Error(d.error||"ai_unavailable");
+    if(!d) throw new Error(lastErr||"ai_unavailable");
     $("mMsg").value=d.hello;
-    $("mPhrases").innerHTML=d.phrases.map(ph=>`<div style="background:#fff;border:1px solid #99f6e4;border-radius:9px;padding:.35rem .6rem"><b>${ph[0]}</b> → ${ph[1]}</div>`).join("");
-    $("mIce").innerHTML=`<b>✨ Backboard AI wrote this hello for ${b.name}:</b><br>“${d.hello}”`;
-    status.textContent="✅ Live AI (Backboard) — review it, edit anything, then Send Hello.";
-    toast("✨ Backboard AI generated your hello!");
+    if(d.phrases&&d.phrases.length) $("mPhrases").innerHTML=d.phrases.map(ph=>`<div style="background:#fff;border:1px solid #99f6e4;border-radius:9px;padding:.35rem .6rem"><b>${ph[0]}</b> → ${ph[1]}</div>`).join("");
+    $("mIce").innerHTML=`<b>✨ Groq AI wrote this hello for ${b.name}:</b><br>“${d.hello}”`;
+    status.textContent="✅ Live AI via the Belongly backend (Groq) — review it, edit anything, then Send Hello.";
+    toast("✨ Groq AI generated your hello!");
   }catch(e){
-    status.textContent="Using Belongly's built-in hello — it's ready below and works fully. (Live AI isn't enabled on this deployment right now.)";
-    toast("Built-in hello ready — live AI unavailable, fallback used 🌱");
+    status.textContent="Using Belongly's built-in hello — it's ready below and works fully. (The AI backend didn't respond just now.)";
+    toast("Built-in hello ready 🌱");
   }finally{ btn.disabled=false; btn.textContent="✨ Try a smarter hello (AI)"; }
 }
 function renderFeatured(){

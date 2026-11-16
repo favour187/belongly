@@ -23,8 +23,11 @@ python3 -m http.server 8000
 ```
 Deploy free: Netlify Drop, GitHub Pages, or Vercel (drag the folder / import repo).
 
-## Tech
-HTML5 · CSS3 · Vanilla JavaScript — zero dependencies, works offline.
+## Tech & Architecture
+- **Frontend:** HTML5 · CSS3 · Vanilla JavaScript — zero dependencies, hosted on **Cloudflare Pages** (https://belongly-dnm.pages.dev)
+- **Backend:** a dedicated **Cloudflare Worker** service, **belongly-api** (https://belongly-api.favprojects.workers.dev), source in `backend/worker.js`. Health: `GET /health`. Endpoint: `POST /api/icebreaker`
+- **AI:** Groq API (`openai/gpt-oss-20b`) called **only from the backend** — the API key is a Worker/Pages secret, never in frontend code or this repo. A Pages Function (`functions/api/icebreaker.js`) is the fallback path, and a built-in phrase engine is the final fallback, so the feature never hard-fails.
+- Profiles/connections/messages persist in the browser (localStorage); Belongly Codes exchange profile cards person-to-person.
 
 ## AI-use disclosure
 Brainstormed, designed and coded with help from an AI assistant (Arena AI), as allowed & encouraged by the hackathon. The human team chose the problem, designed the matching algorithm, journey and safety model, cited all statistics, reviewed/tested all code, and can explain every part. Demo profiles are fictional; no real data collected.
