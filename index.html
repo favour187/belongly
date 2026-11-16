@@ -226,6 +226,14 @@ footer{color:var(--muted);font-size:.87rem;border-top:1px solid var(--line);marg
         <div id="weekStepper" style="display:grid;grid-template-columns:repeat(4,1fr);gap:.4rem;margin-top:1.1rem;text-align:center"></div>
         <div class="progress" style="margin-top:1rem"><i id="dashProgress" style="width:0%"></i></div>
         <p class="meta" id="dashProgressText" style="margin-top:.45rem">0 of 12 quests complete</p>
+        <div style="background:#f0fdfa;border:1.5px solid #99f6e4;border-radius:14px;padding:.9rem;margin-top:.9rem">
+          <div style="display:flex;gap:.7rem;align-items:center;flex-wrap:wrap">
+            <b style="font-size:.95rem">✨ Belongly AI — Today's Welcome Plan</b>
+            <span class="tag">Powered by Groq · Belongly backend</span>
+            <button class="btn small" id="planBtn" style="margin-left:auto">Generate Today's Plan</button>
+          </div>
+          <div id="planOut" style="margin-top:.6rem"><p class="meta" style="margin:0">One press: AI looks at your profile, your top buddy and your next quest — and plans your day. Try it.</p></div>
+        </div>
       </div>
 
       <div class="panel" style="background:#fff5f2;border-color:#ffd9d2">
@@ -547,6 +555,42 @@ function renderStepper(doneSet){
     return `<div><div style="width:38px;height:38px;border-radius:50%;margin:0 auto;display:grid;place-items:center;font-weight:900;color:#fff;background:${col}">${c===3?"✓":i+1}</div><b style="font-size:.85rem;display:block;margin-top:.35rem">${w[0]}</b><span style="font-size:.8rem">${w[1]}</span><br><span style="font-size:.75rem;color:${col};font-weight:700">${state}</span></div>`}).join("");
 }
 
+
+/* Visible AI: Today's Welcome Plan (Groq via belongly-api backend) */
+async function generateWelcomePlan(){
+  const out=$("planOut"), btn=$("planBtn");
+  btn.disabled=true; btn.textContent="✨ Planning…";
+  out.innerHTML=`<p class="meta" style="margin:0">🤔 Belongly AI is thinking — reading your profile, your top match and your journey…</p>`;
+  const ranked=buddies.map(b=>({...b,s:score(b)})).sort((a,b)=>b.s.pts-a.s.pts);
+  const flat=WEEKS.flatMap(w=>w[1].map(q=>q[0]));
+  const nextIdx=flat.findIndex((_,i)=>!done.has(i));
+  const payload={myName:myProfile?myProfile.name:"",city:myProfile?myProfile.city:"Toronto",
+    topBuddy:ranked[0]?ranked[0].name:"",day:Math.min(30,Math.floor(done.size/12*30)+1),
+    nextQuest:nextIdx>=0?flat[nextIdx]:"Write your Advice to Day-1 Me"};
+  let d=null;
+  for(const ep of ["https://belongly-api.favprojects.workers.dev/api/welcome-plan","/api/welcome-plan"]){
+    try{ const ctrl=new AbortController(); const to=setTimeout(()=>ctrl.abort(),22000);
+      const r=await fetch(ep,{method:"POST",headers:{"Content-Type":"application/json"},signal:ctrl.signal,body:JSON.stringify(payload)});
+      clearTimeout(to); const j=await r.json().catch(()=>({})); if(r.ok&&j.ok){d=j;break} }catch(e){}
+  }
+  if(d){
+    out.innerHTML=`<b style="font-size:1.02rem">${d.title}</b>
+      <ol style="margin:.55rem 0 .55rem 1.2rem;display:flex;flex-direction:column;gap:.35rem">${d.steps.map(s=>`<li>${s}</li>`).join("")}</ol>
+      <p style="margin:0"><i>${d.encouragement||""}</i></p>
+      <p class="meta" style="margin:.5rem 0 0;font-size:.75rem">✅ Generated live by Groq AI through the Belongly backend — just for you, right now.</p>`;
+    toast("✨ Your AI Welcome Plan is ready!");
+  }else{
+    out.innerHTML=`<b>Your plan for today (built-in)</b>
+      <ol style="margin:.55rem 0 .55rem 1.2rem;display:flex;flex-direction:column;gap:.35rem">
+      <li>Message ${ranked[0]?ranked[0].name:"your top buddy"} and suggest your next quest: “${payload.nextQuest}”.</li>
+      <li>Do it together in a public place — library, school or café.</li>
+      <li>End the day by answering one question on Ask a Local. Giving help roots you faster.</li></ol>
+      <p class="meta" style="margin:0;font-size:.75rem">Built-in plan shown — the AI backend didn't respond just now, so nothing blocked you.</p>`;
+  }
+  btn.disabled=false; btn.textContent="Generate Today's Plan";
+}
+document.addEventListener("DOMContentLoaded",()=>{const b=$("planBtn"); if(b) b.onclick=generateWelcomePlan;});
+
 /* Journey */
 const WEEKS=[["Week 1 · Land Softly",[["Say hello to your buddy in person","Meet in a public place, swap one story each."],["Find your safe places","Library, school office, community centre — pin them together."],["Eat lunch with someone new","Buddy introduces you to their table/group. No eating alone by Friday."]]],["Week 2 · Learn the Ropes",[["Master one journey","Bus, train or walk route — do it together once, solo the second time."],["Join one club or Circle","Anything. Football, coding, art — one session, no commitment."],["Ask a Local, get an answer","Post one 'silly' question. (There are none.)"]]],["Week 3 · Find Your People",[["Attend one Circle meetup","Small group, shared interest, public place."],["Teach your buddy something","A phrase, a recipe, a song from home. Belonging grows both ways."],["Help the next newcomer","Answer one Ask-a-Local question from your experience."]]],["Week 4 · Feel At Home",[["Your favourite place quest","Take your buddy to the place here that finally feels like yours."],["Celebration meal","Cook or share a dish from home together. Food = belonging."],["Write your 'Advice to Day-1 Me'","Posted (anonymously) to help the next person who lands here."]]]];
 let done=new Set(JSON.parse(localStorage.getItem("rooted_done")||"[]"));
@@ -657,6 +701,7 @@ $("importForm").addEventListener("submit",e=>{e.preventDefault();const raw=$("im
 const FEED=["Sofia in Toronto matched with Amara — 94% match","Olena answered 'bus passes in Berlin' · marked helpful ×12","New Circle: Cook Your Country · Madrid (8/12)","Jack completed Week 4 — Fully Belongly 🌳","Player in Nairobi joined Sketch & Chai","A buddy in Toronto requested at Toronto Library"];
 $("liveFeed")&&($("liveFeed").innerHTML=FEED.map(f=>`<div class="item">🌱 ${f}</div>`).join(""));
 
+if($("planBtn"))$("planBtn").onclick=generateWelcomePlan;
 renderBuddies();renderJourney();renderAsks();renderCircles();loadProfileIntoForm();renderMyPublic();syncMatchingFromProfile();renderPeople();renderFeatured();renderStepper(done);
 </script>
 </body>

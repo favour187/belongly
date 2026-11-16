@@ -48,6 +48,28 @@ export default {
     if (request.method === "GET" && (url.pathname === "/" || url.pathname === "/health")) {
       return json({ service: "belongly-api", status: "ok", ai: env.GROQ_API_KEY ? "groq-configured" : "groq-not-configured", model: MODEL });
     }
+
+    if (request.method === "POST" && url.pathname === "/api/welcome-plan") {
+      if (!env.GROQ_API_KEY) return json({ ok: false, error: "ai_not_configured" }, 503);
+      let inb; try { inb = await request.json(); } catch { return json({ ok: false, error: "bad_json" }, 400); }
+      const clean = (v, m = 140) => String(v ?? "").slice(0, m).trim();
+      const name = clean(inb.myName, 60) || "a newcomer", city = clean(inb.city, 60) || "their new city";
+      const buddy = clean(inb.topBuddy, 60) || "their buddy", nextQ = clean(inb.nextQuest, 140) || "say hello to their buddy in person";
+      const day = Math.max(1, Math.min(30, parseInt(inb.day) || 1));
+      const prompt = `You are Belongly's warm welcome coach. Create a ONE-DAY belonging plan. Newcomer: ${name}, in ${city}, day ${day} of 30. Buddy: ${buddy}. Next journey quest: "${nextQ}". Write JSON only: {"title":"...","steps":["step 1","step 2","step 3"],"encouragement":"..."} — title is a kind 4-7 word plan name, steps are 3 small concrete actions for TODAY (each under 18 words, at least one done WITH the buddy, public places only), encouragement is one warm sentence mentioning ${name.split(" ")[0]}. Only valid JSON.`;
+      try {
+        const r = await fetch("https://api.groq.com/openai/v1/chat/completions", { method: "POST",
+          headers: { Authorization: `Bearer ${env.GROQ_API_KEY}`, "Content-Type": "application/json" },
+          body: JSON.stringify({ model: MODEL, temperature: 0.7, max_tokens: 1200, reasoning_effort: "low", messages: [{ role: "user", content: prompt }] }) });
+        const data = await r.json().catch(() => ({}));
+        if (!r.ok) return json({ ok: false, error: "ai_unavailable" }, 502);
+        const content = String(((data.choices || [])[0] || {}).message?.content || "").trim();
+        const m = content.match(/\{[\s\S]*\}/);
+        if (m) { const parsed = JSON.parse(m[0]);
+          if (parsed.title && Array.isArray(parsed.steps)) return json({ ok: true, source: "groq", model: MODEL, title: String(parsed.title).slice(0,90), steps: parsed.steps.slice(0,3).map(x=>String(x).slice(0,160)), encouragement: String(parsed.encouragement||"").slice(0,180) }); }
+        return json({ ok: false, error: "ai_bad_format" }, 502);
+      } catch { return json({ ok: false, error: "ai_unavailable" }, 502); }
+    }
     if (request.method !== "POST" || url.pathname !== "/api/icebreaker") return json({ ok: false, error: "not_found" }, 404);
     if (!env.GROQ_API_KEY) return json({ ok: false, error: "ai_not_configured" }, 503);
     let inb; try { inb = await request.json(); } catch { return json({ ok: false, error: "bad_json" }, 400); }
