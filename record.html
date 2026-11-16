@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#03211e">
+<title>Belongly — Record Your Voiceover</title>
+<style>
+:root{--ink:#14231c;--muted:#64756b;--bg:#eef7f6;--card:#fff;--teal:#0f766e;--teal2:#0b5e57;--coral:#e85d4f;--mint:#ccfbf1;--line:#cbe7e2}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55;padding:18px 16px 60px}
+.wrap{max-width:760px;margin:0 auto}
+header{background:#03211e;color:#fff;border-radius:18px;padding:20px;margin-bottom:16px}
+header h1{font-size:1.5rem;letter-spacing:-.02em} header h1 span{color:#ff7a66}
+header p{color:#bfe3d8;font-size:.93rem;margin-top:4px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 10px 28px rgba(3,33,30,.09);margin-bottom:16px}
+.btn{font:inherit;cursor:pointer;border:none;background:var(--teal);color:#fff;font-weight:700;padding:.8rem 1.3rem;border-radius:999px;min-height:48px}
+.btn:hover{background:var(--teal2)} .btn.coral{background:var(--coral)} .btn.ghost{background:#fff;color:var(--teal);border:2px solid var(--teal)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.row{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center}
+#status{font-weight:700} .dot{display:inline-block;width:11px;height:11px;border-radius:50%;background:#cbd5d1;margin-right:.4rem}
+.recording .dot{background:#dc2626;animation:blink 1s infinite}
+@keyframes blink{50%{opacity:.25}}
+#timer{font-size:1.6rem;font-weight:900;font-variant-numeric:tabular-nums}
+#scriptBox{font-size:1.22rem;line-height:1.75}
+#scriptBox p{padding:.7rem .9rem;border-radius:12px;margin-bottom:.55rem;color:#8aa39a;transition:.25s}
+#scriptBox p.active{background:var(--mint);color:var(--ink);font-weight:600;box-shadow:inset 3px 0 0 var(--coral)}
+#scriptBox p.done{color:#3f5a52}
+label{font-size:.85rem;font-weight:700}
+input[type=range]{accent-color:var(--teal)}
+audio{width:100%;margin-top:.7rem}
+.tip{font-size:.9rem;color:var(--muted)} .tip b{color:var(--ink)}
+ol{margin-left:1.2rem;font-size:.93rem;color:var(--muted)} ol b{color:var(--ink)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>🎙️ Belongly<span>.</span> Voiceover Studio</h1>
+    <p>Read the script below in your own voice — one paragraph lights up at a time. Record, listen, download, then drop the audio onto <b>Belongly-Demo-Tour-Silent.mp4</b>.</p>
+  </header>
+
+  <div class="card">
+    <div class="row" style="justify-content:space-between">
+      <div id="status"><span class="dot"></span>Ready when you are</div>
+      <div id="timer">00:00</div>
+    </div>
+    <div class="row" style="margin-top:14px">
+      <button class="btn coral" id="recBtn">● Start Recording</button>
+      <button class="btn ghost" id="pauseBtn" disabled>⏸ Pause</button>
+      <button class="btn" id="stopBtn" disabled>⏹ Stop</button>
+    </div>
+    <div id="playback" style="display:none">
+      <audio id="audio" controls></audio>
+      <div class="row" style="margin-top:.7rem">
+        <a class="btn" id="dlBtn" download="belongly-voiceover.webm">⬇ Download My Voiceover</a>
+        <button class="btn ghost" id="againBtn">↺ Record Again</button>
+      </div>
+      <p class="tip" style="margin-top:.6rem">Target length: about <b>2 minutes</b>. If yours is a bit longer or shorter, just set the video speed to 0.9× or 1.1× in your editor — nobody will notice.</p>
+    </div>
+    <p class="tip" id="micHint" style="margin-top:12px">First time? Your browser will ask for microphone permission — tap <b>Allow</b>. Works best in Chrome, somewhere quiet, phone 20cm from your mouth.</p>
+  </div>
+
+  <div class="card">
+    <div class="row" style="justify-content:space-between;margin-bottom:.6rem">
+      <b>Your script (tap a paragraph to jump to it)</b>
+      <span><label for="size">Text size</label> <input type="range" id="size" min="16" max="30" value="20"></span>
+    </div>
+    <div class="row" style="margin-bottom:.8rem">
+      <button class="btn ghost" id="prevBtn">← Previous</button>
+      <button class="btn" id="nextBtn">Next Paragraph →</button>
+      <span class="tip" id="counter"></span>
+    </div>
+    <div id="scriptBox"></div>
+  </div>
+
+  <div class="card">
+    <b>After recording — finish in 3 steps</b>
+    <ol style="margin-top:.5rem">
+      <li><b>Download</b> your voiceover file above.</li>
+      <li>Open your editor (CapCut, VN, Clipchamp — any), import <b>Belongly-Demo-Tour-Silent.mp4</b>, add your audio, line the first sentence up with the Dashboard appearing.</li>
+      <li>Export, upload to <b>YouTube (unlisted is fine)</b>, and paste the link into Devpost.</li>
+    </ol>
+    <p class="tip" style="margin-top:.6rem">Delivery tips: smile a little as you speak (judges hear it), slow down at full stops, and stress the bold moments in your head: <i>"Nobody should have to start over alone."</i> 🎧</p>
+  </div>
+</div>
+
+<script>
+const PARAS = [
+"One in six people on Earth feels lonely. That's what the World Health Organization reported in 2025 — and teenagers feel it the most. Now add this: 281 million people live outside their birth country, and every year, millions of students change school or city. For all of them, the hardest part is the same — the first thirty days somewhere new, knowing nobody. So I built Belongly. Nobody should have to start over alone.",
+"This is Belongly. The moment you arrive, it finds your people. This is my top buddy match — and this ring isn't decoration. Belongly scored this person for me: same city, shared language, shared interests, free this week. Real reasons, real maths.",
+"And this is Belongly AI. Watch — I press one button, and Belongly AI creates a plan for my day, using my profile, my top buddy, and where I am in my journey. There it is: a personal plan, generated live, just for me. Not a canned demo — that was written for me, right now.",
+"Here's the matching engine. Every buddy is scored out of one hundred, and I can see exactly why. And watch what happens when I change what I love… every score re-ranks, live. No black box. I choose people, not profiles.",
+"Found someone? Belongly helps you break the ice. One click, and AI writes my first hello — personal, warm, suggesting a safe public meetup. Plus five phrases in their language, so I can greet them properly. I review it, I edit it, I send it. That's connection, started in ten seconds.",
+"Then Belongly walks with you. The First-Thirty-Days Journey: four weeks of small quests you do with your buddy — find your safe places, master one bus route, teach them a recipe from home. Every quest earns points, and the final quest is writing advice for the next newcomer. Belonging isn't an event. It's a path.",
+"Stuck? Ask a Local — anyone can answer, and today's newcomer becomes tomorrow's local. And Circles turn one buddy into your people: small groups, one shared love, public meetups.",
+"And this is really me. My name, my school, my city — saved as my profile, so schoolmates and newcomers can find me, connect with me, even add me with a shareable Belongly Code. No fake accounts. Real people.",
+"Because connecting young people demands safety by design: verified buddies, public first meetings, no private data, one-tap report and block.",
+"Belongly runs on a real full stack — a cloud frontend, a dedicated backend service, and AI behind it — all live right now. One in six people feels lonely. Belongly makes sure that in your first thirty days somewhere new… you're never one of them. Nobody should have to start over alone. Thank you."
+];
+const box = document.getElementById('scriptBox');
+let cur = 0;
+box.innerHTML = PARAS.map((t,i)=>`<p data-i="${i}">${t}</p>`).join('');
+const ps = [...box.querySelectorAll('p')];
+function setCur(i){
+  cur = Math.max(0, Math.min(PARAS.length-1, i));
+  ps.forEach((p,j)=>{ p.classList.toggle('active', j===cur); p.classList.toggle('done', j<cur); });
+  ps[cur].scrollIntoView({block:'center', behavior:'smooth'});
+  document.getElementById('counter').textContent = `Paragraph ${cur+1} of ${PARAS.length}`;
+}
+ps.forEach(p=>p.onclick=()=>setCur(+p.dataset.i));
+document.getElementById('nextBtn').onclick=()=>setCur(cur+1);
+document.getElementById('prevBtn').onclick=()=>setCur(cur-1);
+document.getElementById('size').oninput=e=>box.style.fontSize=(e.target.value/16.4)+'rem';
+setCur(0);
+
+/* Recording */
+let rec=null, chunks=[], stream=null, t0=0, timerInt=null, elapsedBefore=0;
+const recBtn=document.getElementById('recBtn'), pauseBtn=document.getElementById('pauseBtn'),
+      stopBtn=document.getElementById('stopBtn'), statusEl=document.getElementById('status'),
+      timerEl=document.getElementById('timer');
+function fmt(ms){ const s=Math.floor(ms/1000); return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0'); }
+function setStatus(msg, recording=false){ statusEl.innerHTML=`<span class="dot"></span>${msg}`; document.body.classList.toggle('recording', recording); }
+function startTimer(){ t0=Date.now(); timerInt=setInterval(()=>{ timerEl.textContent=fmt(elapsedBefore+(Date.now()-t0)); },250); }
+function stopTimer(){ clearInterval(timerInt); elapsedBefore+=Date.now()-t0; }
+
+recBtn.onclick = async () => {
+  try{
+    if(!stream){
+      stream = await navigator.mediaDevices.getUserMedia({audio:true});
+    }
+    chunks=[];
+    const mime = MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' : '';
+    rec = new MediaRecorder(stream, mime?{mimeType:mime}:undefined);
+    rec.ondataavailable = e=>{ if(e.data.size) chunks.push(e.data); };
+    rec.onstop = () => {
+      stopTimer();
+      const blob = new Blob(chunks, {type: rec.mimeType || 'audio/webm'});
+      const url = URL.createObjectURL(blob);
+      const a=document.getElementById('audio'); a.src=url;
+      const dl=document.getElementById('dlBtn'); dl.href=url;
+      dl.download = 'belongly-voiceover.' + ((rec.mimeType||'webm').includes('mp4')?'m4a':'webm');
+      document.getElementById('playback').style.display='block';
+      setStatus('Done! Listen back, then download. 🎧');
+      recBtn.disabled=false; pauseBtn.disabled=true; stopBtn.disabled=true;
+      recBtn.textContent='● Start Recording';
+    };
+    elapsedBefore=0; timerEl.textContent='00:00';
+    rec.start(500); startTimer();
+    setStatus('Recording… speak the highlighted paragraph, tap Next as you go.', true);
+    recBtn.disabled=true; pauseBtn.disabled=false; stopBtn.disabled=false;
+    document.getElementById('micHint').style.display='none';
+  }catch(e){
+    setStatus('Microphone blocked — allow mic access in the browser, then try again.');
+  }
+};
+pauseBtn.onclick = () => {
+  if(!rec) return;
+  if(rec.state==='recording'){ rec.pause(); stopTimer(); setStatus('Paused — breathe. Tap Resume when ready.'); pauseBtn.textContent='▶ Resume'; }
+  else if(rec.state==='paused'){ rec.resume(); startTimer(); setStatus('Recording…', true); pauseBtn.textContent='⏸ Pause'; }
+};
+stopBtn.onclick = () => { if(rec && rec.state!=='inactive') rec.stop(); };
+document.getElementById('againBtn').onclick = () => {
+  document.getElementById('playback').style.display='none'; elapsedBefore=0; timerEl.textContent='00:00'; setCur(0);
+  setStatus('Ready — take two. You have got this.');
+};
+</script>
+</body>
+</html>
