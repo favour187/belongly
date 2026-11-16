@@ -1,4 +1,6 @@
-# 🌱 Belongly — Nobody Should Have to Start Over Alone
+# 🌱 Belongly
+
+**Live app:** https://belongly-dnm.pages.dev · **Code:** https://github.com/favour187/belongly — Nobody Should Have to Start Over Alone
 
 A web app that matches newcomers **anywhere in the world** with a verified local buddy, a structured **First-30-Days Journey**, an **Ask-a-Local** board, and **Connection Circles**. Built for the **CSC Winter Sparkathon 2026** (technology that brings people together / helps people support one another).
 

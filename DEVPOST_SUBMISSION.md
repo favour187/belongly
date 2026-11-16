@@ -52,8 +52,8 @@ Real accounts + organisation verification flow · city launch kits for schools/l
 ## Submission Checklist
 - [ ] Start a project on the CSC Winter Sparkathon Devpost (you're already registered)
 - [ ] Paste name, tagline, problem, what it does, tools, AI disclosure (above)
-- [ ] Demo link: [REPLACE after deploying index.html — GitHub Pages / Netlify / Vercel]
-- [ ] Public GitHub repo link (required for CSC Innovation Award eligibility)
+- [ ] Demo link: https://belongly-dnm.pages.dev
+- [ ] Public GitHub repo: https://github.com/favour187/belongly (required for CSC Innovation Award eligibility)
 - [ ] 3–5 screenshots: Dashboard, BuddyMatch scores, Journey, Ask a Local, Safety
 - [ ] 1–2 min demo video (see DEMO_SCRIPT.md) — optional but strongly encouraged
 - [ ] **Opt in** to CSC Innovation Award / Honorable Mention
