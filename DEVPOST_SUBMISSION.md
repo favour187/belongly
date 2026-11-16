@@ -17,7 +17,8 @@ Belongly is a web app that makes sure nobody faces their first 30 days alone. It
 1. **BuddyMatch (transparent algorithm)** — Newcomers set where they've landed, languages they speak, and things they love. Belongly scores every verified local buddy: same city/school (35pts) + shared languages (up to 30pts) + shared interests (up to 25pts) + free this week (10pts). Users see the exact percentage **and the reasons** — and when they edit their profile, every score recalculates live. No black box.
 2. **The First-30-Days Journey** — A 4-week quest path (Land Softly → Learn the Ropes → Find Your People → Feel At Home) designed to be completed *with* your buddy: first in-person hello in a public place, mastering one bus route together, joining one club, teaching your buddy a recipe from home, and finally writing "Advice to Day-1 Me" for the next newcomer. Progress, points and badges make belonging feel achievable, one small win at a time.
 3. **Ask a Local** — A moderated Q&A board per city ("How do student bus passes work here?" "Which clubs welcome total beginners?"). Anyone can answer; helpful answers are upvoted. Today's newcomer becomes tomorrow's local.
-4. **Connection Circles** — Small groups (max 12) meeting in public around one shared love — Saturday football, Cook Your Country, Two-Language Book Club — the bridge from "I know one person" to "I have my people."
+4. **AI Icebreaker + Phrase Card** — Opening a match generates a personalised first hello (from your shared interests, city and match score) plus 5 essential phrases in your buddy's language (Spanish, Ukrainian, Arabic, French, Mandarin, Portuguese, Yoruba, English). It runs on a built-in phrase engine today and is architected to plug into **Backboard.io's Unified API** (sponsor, $10 credits with code SPARKATHON) via a Cloudflare Worker, so the API key stays server-side and out of the public frontend.
+5. **Connection Circles** — Small groups (max 12) meeting in public around one shared love — Saturday football, Cook Your Country, Two-Language Book Club — the bridge from "I know one person" to "I have my people."
 
 **Safety is the product:** verified buddies only (via schools/libraries/community orgs) · public first meetings only · first names + city only, no private data · one-tap report & block · trusted-adult visibility for under-18s · per-city moderation.
 
@@ -27,6 +28,7 @@ A single-page web app in **HTML, CSS and vanilla JavaScript** (zero dependencies
 ## Tools & Resources Used
 - HTML5, CSS3, vanilla JavaScript (state, rendering, localStorage)
 - AI assistant (Arena AI) — see disclosure below
+- Sponsor resource identified for the live-AI upgrade: Backboard.io Unified API ($10 participant credits, code SPARKATHON) — integration is designed (server-side via Cloudflare Worker) and the feature already works with a built-in phrase engine, so the demo never depends on an API key
 - Statistics & sources: WHO Commission on Social Connection global report (June 30, 2025, who.int); UN/UNHCR Global Trends — international migrants & forced displacement (inee.org/collections/forced-displacement, UNHCR)
 - No external libraries/APIs. All demo profiles, questions and feed items are fictional.
 

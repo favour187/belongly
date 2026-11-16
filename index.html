@@ -101,30 +101,50 @@ footer{color:var(--muted);font-size:.87rem;border-top:1px solid var(--line);marg
 
     <!-- DASHBOARD -->
     <section class="view active" id="view-dash">
-      <div class="hero"><div class="globe">🌍</div>
-        <h2>You moved. Your people haven't found you yet. Let's fix that.</h2>
-        <p>Belongly is for the <b>1 in 6 people worldwide who feel lonely</b> (WHO, 2025) — newcomers, migrants, refugees, exchange & new students. We match you with a verified local buddy, then walk your first 30 days <i>together</i>.</p>
-        <button class="btn light" onclick="go('journey')">Continue My Journey — Day 9</button>
-      </div>
-      <div class="stats">
-        <div class="stat"><b>1 in 6</b><small>people globally feel lonely</small><br><a href="https://www.who.int/news/item/30-06-2025-social-connection-linked-to-improved-heath-and-reduced-risk-of-early-death" target="_blank" rel="noopener">WHO Commission on Social Connection, 2025</a></div>
-        <div class="stat"><b>281M</b><small>international migrants worldwide</small><br><a href="https://inee.org/collections/forced-displacement" target="_blank" rel="noopener">UN / UNHCR Global Trends</a></div>
-        <div class="stat"><b>117M</b><small>people forcibly displaced</small><br><a href="https://inee.org/collections/forced-displacement" target="_blank" rel="noopener">UNHCR, 2023</a></div>
-        <div class="stat"><b id="liveMatches">12,408</b><small>buddy matches made on Belongly (demo)</small></div>
-      </div>
-      <div class="twocol">
-        <div class="panel">
-          <h3>🌱 Your journey at a glance</h3>
-          <p class="meta" style="margin:.4rem 0 .7rem"><span id="dashProgressText">0 of 12 quests complete</span> — finish quests with your buddy to earn Points & badges.</p>
-          <div class="progress"><i id="dashProgress" style="width:0%"></i></div>
-          <div id="dashBadges" style="margin-top:.8rem;display:flex;gap:.4rem;flex-wrap:wrap"></div>
-          <button class="btn small" style="margin-top:1rem" onclick="go('journey')">Open Journey →</button>
+      <p class="meta" style="margin-bottom:.3rem">📍 <span id="dashCity">Toronto, Canada</span> &nbsp;·&nbsp; <span id="dashDay">Your journey to belonging starts with meaningful connections.</span></p>
+      <h2 style="font-size:clamp(1.6rem,3.6vw,2.3rem);margin-bottom:1.2rem" id="dashWelcome">Welcome! 👋</h2>
+
+      <div class="panel" style="margin-bottom:1.1rem">
+        <div style="display:flex;gap:1.1rem;flex-wrap:wrap;align-items:center">
+          <div class="avatar" id="featAvatar" style="width:92px;height:92px;font-size:2.2rem;background:#0f766e">?</div>
+          <div style="flex:1;min-width:210px">
+            <div style="color:#e85d4f;font-weight:800;font-size:.75rem;letter-spacing:.08em">YOUR TOP BUDDY MATCH</div>
+            <h3 id="featName" style="font-size:1.45rem;margin:.2rem 0">Finding your match…</h3>
+            <div class="meta" id="featMeta"></div>
+            <div style="display:flex;gap:.6rem;margin-top:.8rem;flex-wrap:wrap">
+              <button class="btn ghost small" id="featMsg">💬 Message</button>
+              <button class="btn small" id="featConnect" style="background:#e85d4f;box-shadow:0 6px 16px rgba(232,93,79,.35)">🤝 Connect</button>
+            </div>
+          </div>
+          <div style="text-align:center">
+            <svg width="104" height="104" viewBox="0 0 104 104"><circle cx="52" cy="52" r="44" fill="none" stroke="#e6f2ef" stroke-width="10"/><circle id="featRing" cx="52" cy="52" r="44" fill="none" stroke="#0f766e" stroke-width="10" stroke-linecap="round" stroke-dasharray="276" stroke-dashoffset="276" transform="rotate(-90 52 52)"/></svg>
+            <div style="margin-top:-72px;font-size:1.35rem;font-weight:900" id="featScore">–</div><div class="meta" style="font-size:.75rem">Compatibility</div>
+          </div>
+          <div style="flex:1;min-width:210px">
+            <b style="font-size:.92rem">Why you're a great match</b>
+            <div id="featWhy" style="display:flex;flex-direction:column;gap:.4rem;margin-top:.5rem"></div>
+          </div>
         </div>
-        <div class="panel">
-          <h3>🌍 Happening now on Belongly</h3>
-          <div class="feed" id="liveFeed" style="margin-top:.7rem"></div>
+      </div>
+
+      <div class="panel" style="margin-bottom:1.1rem">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.6rem">
+          <b>🌱 Your First-30-Days Journey</b><a href="#" onclick="go('journey');return false;" style="font-weight:700;font-size:.9rem">View my journey →</a>
+        </div>
+        <div id="weekStepper" style="display:grid;grid-template-columns:repeat(4,1fr);gap:.4rem;margin-top:1.1rem;text-align:center"></div>
+        <div class="progress" style="margin-top:1rem"><i id="dashProgress" style="width:0%"></i></div>
+        <p class="meta" id="dashProgressText" style="margin-top:.45rem">0 of 12 quests complete</p>
+      </div>
+
+      <div class="panel" style="background:#fff5f2;border-color:#ffd9d2">
+        <div style="display:flex;gap:1rem;align-items:center;flex-wrap:wrap">
+          <div style="font-size:2rem;background:#e85d4f;color:#fff;width:56px;height:56px;border-radius:50%;display:grid;place-items:center;flex:none">?</div>
+          <div style="flex:1;min-width:220px"><div style="color:#e85d4f;font-weight:800;font-size:.75rem;letter-spacing:.08em">ASK A LOCAL</div>
+          <b id="dashAskQ">What's the best way to get around the city on a budget?</b><div class="meta">Locals answer the questions newcomers are afraid to ask.</div></div>
+          <button class="btn small" style="background:#e85d4f;box-shadow:0 6px 16px rgba(232,93,79,.35)" onclick="go('ask')">View Answers →</button>
         </div>
       </div>
+      <p class="meta" style="margin-top:1rem;font-size:.8rem">Why this matters: <b>1 in 6 people worldwide feels lonely</b> (WHO, 2025) · 281M migrants · 117M displaced — <a href="#" onclick="go('safety');return false;">see the evidence & our safety model →</a></p>
     </section>
 
     <!-- BUDDY MATCH -->
@@ -280,6 +300,12 @@ footer{color:var(--muted);font-size:.87rem;border-top:1px solid var(--line);marg
   <div class="why" id="mWhy"></div>
   <p style="font-size:.92rem;margin:1rem 0 .5rem"><b>Suggested first meetup (public & safe):</b></p>
   <p class="meta" id="mMeet"></p>
+  <div style="background:#f0fdfa;border:1.5px solid #99f6e4;border-radius:14px;padding:.85rem;margin-top:.9rem">
+    <b style="font-size:.9rem">✨ AI Icebreaker + Phrase Card</b> <span class="tag" style="margin-left:.3rem">Backboard-ready</span>
+    <p class="meta" id="mIce" style="margin:.4rem 0"></p>
+    <div id="mPhrases" style="display:flex;flex-direction:column;gap:.3rem;font-size:.88rem"></div>
+    <button class="btn small light" id="mUseIce" style="margin-top:.6rem">Use this hello ↓</button>
+  </div>
   <textarea id="mMsg" rows="3" style="margin-top:.8rem">Hi! I'm new here and Belongly matched us. Would you like to do the "Find our favourite lunch spot" quest together this week?</textarea>
   <div style="display:flex;gap:.6rem;margin-top:1rem"><button class="btn" id="mSend" style="flex:1">Send Hello 💚</button><button class="btn ghost" id="mClose">Close</button></div>
 </div></div>
@@ -328,7 +354,7 @@ function renderBuddies(){
   buildChecks($("myLangs"),LANGS,my.langs,"langs");buildChecks($("myInterests"),INTERESTS,my.ints,"ints");
   let list=buddies.map(b=>({...b,s:score(b)})).sort((a,b)=>b.s.pts-a.s.pts);
   if(buddyMode==="free")list=list.filter(b=>b.free);if(buddyMode==="90")list=list.filter(b=>b.s.pts>=80);
-  $("buddyGrid").innerHTML=list.length?list.map((b,i)=>`
+  setTimeout(()=>{try{renderFeatured()}catch(e){}},0);$("buddyGrid").innerHTML=list.length?list.map((b,i)=>`
    <article class="card">
      <div style="display:flex;gap:.8rem;align-items:center"><div class="avatar" style="background:${COLORS[i%COLORS.length]}">${b.name[0]}</div>
        <div><h3>${b.name} · ${b.city}</h3><div class="meta">${b.country} · Buddy since 2025</div></div>
@@ -349,10 +375,52 @@ function openMatch(name){currentBuddy=buddies.find(b=>b.name===name);const s=sco
  $("mTitle").textContent=`Say hello to ${currentBuddy.name} 👋`;$("mMeta").textContent=`${currentBuddy.city}, ${currentBuddy.country} · ✅ Verified by ${currentBuddy.verified}`;
  $("mWhy").innerHTML=`<b>${s.pts}% match because:</b><br>`+s.why.join("<br>");
  $("mMeet").textContent=currentBuddy.city===my.city?`📍 ${currentBuddy.city} Public Library, main hall — Saturday 11am. A librarian/mentor is present. Bring nothing but yourself.`:"💻 Video call inside Belongly (30 min, camera optional) — then plan an in-person quest when you're in the same city.";
+ const pl=buddyPhraseLang(currentBuddy);const ice=generateIcebreaker(currentBuddy,s);
+ $("mIce").innerHTML=`<b>Your personalised first hello to ${currentBuddy.name}:</b><br>“${ice}”<br><span style="font-size:.78rem">Say it in ${pl} — 5 phrases that break the ice:</span>`;
+ $("mPhrases").innerHTML=(PHRASES[pl]||PHRASES.English).map(ph=>`<div style="background:#fff;border:1px solid #ccfbf1;border-radius:9px;padding:.35rem .6rem"><b>${ph[0]}</b> → ${ph[1]}</div>`).join("");
+ $("mUseIce").onclick=()=>{$("mMsg").value=ice;toast("✨ Icebreaker placed in your message — edit anything, then Send Hello.")};
  $("overlay").classList.add("open")}
 $("mClose").onclick=()=>$("overlay").classList.remove("open");
 $("overlay").addEventListener("click",e=>{if(e.target===$("overlay"))$("overlay").classList.remove("open")});
-$("mSend").onclick=()=>{$("overlay").classList.remove("open");let m=parseInt($("liveMatches").dataset.v||12408)+1;$("liveMatches").dataset.v=m;$("liveMatches").textContent=m.toLocaleString();toast(`💚 Hello sent to ${currentBuddy.name}! Buddies usually reply within a day. Quest unlocked: say hello in person.`)};
+$("mSend").onclick=()=>{$("overlay").classList.remove("open");const lm=$("liveMatches");if(lm){let m=parseInt(lm.dataset.v||12408)+1;lm.dataset.v=m;lm.textContent=m.toLocaleString()}toast(`💚 Hello sent to ${currentBuddy.name}! Buddies usually reply within a day. Quest unlocked: say hello in person.`)};
+
+
+/* ===== AI ICEBREAKER + PHRASE CARD (built-in engine now, Backboard.io API-ready) =====
+   Real-AI upgrade path: claim Backboard sponsor credits (code SPARKATHON, $10) and point
+   generateIcebreaker() at a Cloudflare Worker that calls Backboard's Unified API server-side,
+   so the API key is never exposed in this public frontend. */
+const PHRASES={
+ Spanish:[["Hello","Hola"],["Thank you so much","Muchas gracias"],["I'm new here","Soy nuevo/a aquí"],["Can you help me, please?","¿Puedes ayudarme, por favor?"],["See you on Saturday!","¡Nos vemos el sábado!"]],
+ Ukrainian:[["Hello","Привіт (Pryvit)"],["Thank you so much","Дуже дякую (Duzhe dyakuyu)"],["I'm new here","Я тут новенький/а (Ya tut novenkyi/a)"],["Can you help me, please?","Чи можете допомогти, будь ласка?"],["See you on Saturday!","До зустрічі в суботу!"]],
+ Arabic:[["Hello","مرحباً (Marhaban)"],["Thank you so much","شكراً جزيلاً (Shukran jazeelan)"],["I'm new here","أنا جديد هنا (Ana jadeed huna)"],["Can you help me, please?","هل يمكنك مساعدتي من فضلك؟"],["See you on Saturday!","أراك يوم السبت!"]],
+ French:[["Hello","Bonjour"],["Thank you so much","Merci beaucoup"],["I'm new here","Je suis nouveau/nouvelle ici"],["Can you help me, please?","Pouvez-vous m'aider, s'il vous plaît ?"],["See you on Saturday!","À samedi !"]],
+ Mandarin:[["Hello","你好 (Nǐ hǎo)"],["Thank you so much","非常感谢 (Fēicháng gǎnxiè)"],["I'm new here","我刚来这里 (Wǒ gāng lái zhèlǐ)"],["Can you help me, please?","你能帮我一下吗？(Nǐ néng bāng wǒ yíxià ma?)"],["See you on Saturday!","星期六见！(Xīngqīliù jiàn!)"]],
+ Portuguese:[["Hello","Olá"],["Thank you so much","Muito obrigado/a"],["I'm new here","Sou novo/a aqui"],["Can you help me, please?","Podes ajudar-me, por favor?"],["See you on Saturday!","Até sábado!"]],
+ Yoruba:[["Hello","Bawo ni"],["Thank you so much","E se gan-an"],["I'm new here","Mo sese de ibi"],["Can you help me, please?","Jowo, se o le ran mi lowo?"],["See you on Saturday!","A ma ri ara wa ni Satide!"]],
+ English:[["Hello","Hello!"],["Thank you so much","Thank you so much"],["I'm new here","I'm new here"],["Can you help me, please?","Can you help me, please?"],["See you on Saturday!","See you on Saturday!"]]
+};
+function buddyPhraseLang(b){const other=b.langs.find(l=>!my.langs.includes(l));return other||b.langs[0]||"English"}
+function generateIcebreaker(b,s){
+  const sharedI=b.ints.filter(i=>my.ints.includes(i));
+  const hobby=sharedI.length?` I saw we both love ${sharedI[0].toLowerCase()} —`:"";
+  return `Hi ${b.name}! I'm ${myProfile?myProfile.name.split(" ")[0]:"new here"} and I've just arrived in ${b.city}. Belongly matched us at ${s.pts}% because we ${sharedI.length?"share "+sharedI.join(" and "):"seem like a great fit"}.${hobby} would you be up for a first Journey quest together this week — maybe finding our favourite lunch spot? Public place, Saturday morning, totally relaxed. 🌱`;
+}
+function renderFeatured(){
+  const ranked=buddies.map(b=>({...b,s:score(b)})).sort((a,b)=>b.s.pts-a.s.pts);const b=ranked[0];if(!b)return;
+  $("featAvatar").textContent=b.name[0];$("featName").textContent=b.name;
+  $("featMeta").innerHTML=`📍 ${b.city}, ${b.country}<br>🏫 ${b.verified}<br>🗣️ ${b.langs.join(" · ")}`;
+  $("featScore").textContent=b.s.pts+"%";$("featRing").style.strokeDashoffset=String(276-(276*b.s.pts/100));
+  $("featWhy").innerHTML=b.s.why.map(w=>`<span class="tag" style="white-space:normal;text-align:left">${w}</span>`).join("");
+  $("featConnect").onclick=()=>openMatch(b.name);$("featMsg").onclick=()=>openMatch(b.name);
+  if(myProfile){$("dashWelcome").textContent="Welcome, "+myProfile.name.split(" ")[0]+"! 👋";$("dashCity").textContent=myProfile.city+(myProfile.from?", · from "+myProfile.from:"")}
+}
+/* Week stepper for the dashboard */
+function renderStepper(doneSet){
+  const names=[["Week 1","Settle In"],["Week 2","Explore & Connect"],["Week 3","Get Involved"],["Week 4","Give Back"]];
+  $("weekStepper").innerHTML=names.map((w,i)=>{const start=i*3;const c=[0,1,2].filter(k=>doneSet.has(start+k)).length;
+    const state=c===3?"✅ Complete":c>0||i===0&&doneSet.size===0?"In Progress":"Upcoming";const col=c===3?"#0f766e":state==="In Progress"?"#e85d4f":"#cbd5d1";
+    return `<div><div style="width:38px;height:38px;border-radius:50%;margin:0 auto;display:grid;place-items:center;font-weight:900;color:#fff;background:${col}">${c===3?"✓":i+1}</div><b style="font-size:.85rem;display:block;margin-top:.35rem">${w[0]}</b><span style="font-size:.8rem">${w[1]}</span><br><span style="font-size:.75rem;color:${col};font-weight:700">${state}</span></div>`}).join("");
+}
 
 /* Journey */
 const WEEKS=[["Week 1 · Land Softly",[["Say hello to your buddy in person","Meet in a public place, swap one story each."],["Find your safe places","Library, school office, community centre — pin them together."],["Eat lunch with someone new","Buddy introduces you to their table/group. No eating alone by Friday."]]],["Week 2 · Learn the Ropes",[["Master one journey","Bus, train or walk route — do it together once, solo the second time."],["Join one club or Circle","Anything. Football, coding, art — one session, no commitment."],["Ask a Local, get an answer","Post one 'silly' question. (There are none.)"]]],["Week 3 · Find Your People",[["Attend one Circle meetup","Small group, shared interest, public place."],["Teach your buddy something","A phrase, a recipe, a song from home. Belonging grows both ways."],["Help the next newcomer","Answer one Ask-a-Local question from your experience."]]],["Week 4 · Feel At Home",[["Your favourite place quest","Take your buddy to the place here that finally feels like yours."],["Celebration meal","Cook or share a dish from home together. Food = belonging."],["Write your 'Advice to Day-1 Me'","Posted (anonymously) to help the next person who lands here."]]]];
@@ -362,7 +430,8 @@ function renderJourney(){let html="",idx=0,total=0;
  $("questList").innerHTML=html;const pct=Math.round(done.size/12*100);const roots=done.size*10;
  $("jProgress").style.width=pct+"%";$("dashProgress").style.width=pct+"%";$("jText").textContent=pct+"% complete ("+done.size+"/12)";$("jRoots").textContent=roots;$("dashProgressText").textContent=`${done.size} of 12 quests complete · ${roots} Points earned`;
  const badges=[];if(done.size>=1)badges.push("🌱 First Step");if(done.size>=3)badges.push("🧭 Week 1 Done");if(done.size>=6)badges.push("🤝 Ropes Learned");if(done.size>=9)badges.push("⭕ Circle Regular");if(done.size>=12)badges.push("🌳 Fully Belongly");
- $("dashBadges").innerHTML=badges.length?badges.map(b=>`<span class="tag">${b}</span>`).join(""):`<span class="meta">Complete quests to earn badges</span>`}
+ $("dashBadges")&&($("dashBadges").innerHTML=badges.length?badges.map(b=>`<span class="tag">${b}</span>`).join(""):`<span class="meta">Complete quests to earn badges</span>`);try{renderStepper(done)}catch(e){}
+}
 function toggleQuest(id,on){on?done.add(id):done.delete(id);localStorage.setItem("rooted_done",JSON.stringify([...done]));renderJourney();if(on)toast("🌱 Quest complete! +10 Points. Do the next one with your buddy.")}
 
 /* Ask a Local */
@@ -461,9 +530,9 @@ $("importForm").addEventListener("submit",e=>{e.preventDefault();const raw=$("im
 
 /* Live feed */
 const FEED=["Sofia in Toronto matched with Amara — 94% match","Olena answered 'bus passes in Berlin' · marked helpful ×12","New Circle: Cook Your Country · Madrid (8/12)","Jack completed Week 4 — Fully Belongly 🌳","Player in Nairobi joined Sketch & Chai","A buddy in Toronto requested at Toronto Library"];
-$("liveFeed").innerHTML=FEED.map(f=>`<div class="item">🌱 ${f}</div>`).join("");
+$("liveFeed")&&($("liveFeed").innerHTML=FEED.map(f=>`<div class="item">🌱 ${f}</div>`).join(""));
 
-renderBuddies();renderJourney();renderAsks();renderCircles();loadProfileIntoForm();renderMyPublic();syncMatchingFromProfile();renderPeople();
+renderBuddies();renderJourney();renderAsks();renderCircles();loadProfileIntoForm();renderMyPublic();syncMatchingFromProfile();renderPeople();renderFeatured();renderStepper(done);
 </script>
 </body>
 </html>
