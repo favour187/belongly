@@ -75,6 +75,41 @@ footer{color:var(--muted);font-size:.87rem;border-top:1px solid var(--line);marg
   h1,h2,h3{letter-spacing:-.02em}
   .score{color:#0f766e}.tag{background:#ccfbf1;color:#115e59}
   ::selection{background:#99f6e4}
+
+  /* --- Mobile-first polish --- */
+  @media (max-width:860px){
+    .app{grid-template-columns:1fr}
+    aside{position:sticky;top:0;z-index:60;height:auto;flex-direction:row;flex-wrap:nowrap;align-items:center;overflow-x:auto;padding:.7rem .8rem;gap:.35rem;scrollbar-width:none}
+    aside::-webkit-scrollbar{display:none}
+    aside .logo{font-size:1.15rem;white-space:nowrap} aside .tagline{display:none}
+    .navbtn{width:auto;flex:0 0 auto;padding:.55rem .75rem;font-size:.88rem;white-space:nowrap;min-height:44px}
+    aside .who{display:none}
+    main{padding:1rem .9rem 4.5rem}
+    .topbar{margin-bottom:.9rem}.topbar .btn{min-height:44px}
+    .stats{grid-template-columns:repeat(2,1fr);gap:.7rem}
+    .panel,.card{padding:1rem;border-radius:14px}
+    .hero{padding:1.2rem;border-radius:16px}.hero .globe{font-size:4.5rem;opacity:.18}
+.grid{grid-template-columns:1fr}
+    .controls{flex-direction:column;align-items:stretch}
+    .pill,.btn{min-height:44px}
+    input,select,textarea{font-size:16px;padding:.75rem .85rem}
+    .modal{border-radius:18px;padding:1.15rem}
+    .overlay{padding:.6rem;align-items:end}
+    .overlay .modal{max-height:92vh;border-radius:18px 18px 0 0}
+    #toast{width:calc(100vw - 24px)}
+    .quest{padding:.8rem}
+    .twocol{gap:1rem}
+    .avatar{width:46px;height:46px;font-size:1.15rem}
+    svg{max-width:100%}
+  }
+  @media (max-width:480px){
+    .stats{grid-template-columns:repeat(2,1fr)} .stat b{font-size:1.25rem}
+    .navbtn{font-size:.82rem;padding:.5rem .6rem}
+    #weekStepper b{font-size:.75rem} #weekStepper span{font-size:.7rem}
+    .score{font-size:1.1rem}
+    h1{font-size:1.35rem}
+  }
+  @media (hover:none){ .card:hover{transform:none} }
 </style>
 </head>
 <body>
@@ -305,6 +340,8 @@ footer{color:var(--muted);font-size:.87rem;border-top:1px solid var(--line);marg
     <p class="meta" id="mIce" style="margin:.4rem 0"></p>
     <div id="mPhrases" style="display:flex;flex-direction:column;gap:.3rem;font-size:.88rem"></div>
     <button class="btn small light" id="mUseIce" style="margin-top:.6rem">Use this hello ↓</button>
+    <button class="btn small" id="mAiBtn" style="margin-top:.6rem;margin-left:.4rem">✨ Generate with Backboard AI</button>
+    <p class="meta" id="mAiStatus" style="margin-top:.45rem;font-size:.78rem"></p>
   </div>
   <textarea id="mMsg" rows="3" style="margin-top:.8rem">Hi! I'm new here and Belongly matched us. Would you like to do the "Find our favourite lunch spot" quest together this week?</textarea>
   <div style="display:flex;gap:.6rem;margin-top:1rem"><button class="btn" id="mSend" style="flex:1">Send Hello 💚</button><button class="btn ghost" id="mClose">Close</button></div>
@@ -379,6 +416,7 @@ function openMatch(name){currentBuddy=buddies.find(b=>b.name===name);const s=sco
  $("mIce").innerHTML=`<b>Your personalised first hello to ${currentBuddy.name}:</b><br>“${ice}”<br><span style="font-size:.78rem">Say it in ${pl} — 5 phrases that break the ice:</span>`;
  $("mPhrases").innerHTML=(PHRASES[pl]||PHRASES.English).map(ph=>`<div style="background:#fff;border:1px solid #ccfbf1;border-radius:9px;padding:.35rem .6rem"><b>${ph[0]}</b> → ${ph[1]}</div>`).join("");
  $("mUseIce").onclick=()=>{$("mMsg").value=ice;toast("✨ Icebreaker placed in your message — edit anything, then Send Hello.")};
+ $("mAiStatus").textContent="";$("mAiBtn").onclick=()=>generateWithBackboard(currentBuddy,s);
  $("overlay").classList.add("open")}
 $("mClose").onclick=()=>$("overlay").classList.remove("open");
 $("overlay").addEventListener("click",e=>{if(e.target===$("overlay"))$("overlay").classList.remove("open")});
@@ -404,6 +442,29 @@ function generateIcebreaker(b,s){
   const sharedI=b.ints.filter(i=>my.ints.includes(i));
   const hobby=sharedI.length?` I saw we both love ${sharedI[0].toLowerCase()} —`:"";
   return `Hi ${b.name}! I'm ${myProfile?myProfile.name.split(" ")[0]:"new here"} and I've just arrived in ${b.city}. Belongly matched us at ${s.pts}% because we ${sharedI.length?"share "+sharedI.join(" and "):"seem like a great fit"}.${hobby} would you be up for a first Journey quest together this week — maybe finding our favourite lunch spot? Public place, Saturday morning, totally relaxed. 🌱`;
+}
+
+/* Live AI via /api/icebreaker (Cloudflare Pages Function -> Backboard). Falls back to built-in engine. */
+async function generateWithBackboard(b, s){
+  const status=$("mAiStatus"), btn=$("mAiBtn");
+  btn.disabled=true; btn.textContent="✨ Generating…"; status.textContent="Asking Backboard AI for a personalised hello…";
+  try{
+    const ctrl=new AbortController(); const to=setTimeout(()=>ctrl.abort(),20000);
+    const r=await fetch("/api/icebreaker",{method:"POST",headers:{"Content-Type":"application/json"},signal:ctrl.signal,
+      body:JSON.stringify({buddyName:b.name,city:b.city,myName:myProfile?myProfile.name:"",language:buddyPhraseLang(b),
+        sharedInterests:b.ints.filter(i=>my.ints.includes(i)),score:s.pts})});
+    clearTimeout(to);
+    const d=await r.json().catch(()=>({}));
+    if(!r.ok||!d.ok) throw new Error(d.error||"ai_unavailable");
+    $("mMsg").value=d.hello;
+    $("mPhrases").innerHTML=d.phrases.map(ph=>`<div style="background:#fff;border:1px solid #99f6e4;border-radius:9px;padding:.35rem .6rem"><b>${ph[0]}</b> → ${ph[1]}</div>`).join("");
+    $("mIce").innerHTML=`<b>✨ Backboard AI wrote this hello for ${b.name}:</b><br>“${d.hello}”`;
+    status.textContent="✅ Live AI (Backboard) — review it, edit anything, then Send Hello.";
+    toast("✨ Backboard AI generated your hello!");
+  }catch(e){
+    status.textContent="Built-in hello is ready below — live AI is unavailable right now (Backboard LLM credits may still need activating), so nothing is blocked.";
+    toast("Built-in hello ready — live AI unavailable, fallback used 🌱");
+  }finally{ btn.disabled=false; btn.textContent="✨ Generate with Backboard AI"; }
 }
 function renderFeatured(){
   const ranked=buddies.map(b=>({...b,s:score(b)})).sort((a,b)=>b.s.pts-a.s.pts);const b=ranked[0];if(!b)return;
