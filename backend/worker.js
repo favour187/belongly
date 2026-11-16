@@ -56,7 +56,7 @@ export default {
       const name = clean(inb.myName, 60) || "a newcomer", city = clean(inb.city, 60) || "their new city";
       const buddy = clean(inb.topBuddy, 60) || "their buddy", nextQ = clean(inb.nextQuest, 140) || "say hello to their buddy in person";
       const day = Math.max(1, Math.min(30, parseInt(inb.day) || 1));
-      const prompt = `You are Belongly's warm welcome coach. Create a ONE-DAY belonging plan. Newcomer: ${name}, in ${city}, day ${day} of 30. Buddy: ${buddy}. Next journey quest: "${nextQ}". Write JSON only: {"title":"...","steps":["step 1","step 2","step 3"],"encouragement":"..."} — title is a kind 4-7 word plan name, steps are 3 small concrete actions for TODAY (each under 18 words, at least one done WITH the buddy, public places only), encouragement is one warm sentence mentioning ${name.split(" ")[0]}. Only valid JSON.`;
+      const prompt = `You are Belongly's warm welcome coach. Create a ONE-DAY belonging plan. Newcomer: ${name}, in ${city}, day ${day} of 30. Buddy: ${buddy}. Next journey quest: "${nextQ}". Write JSON only: {"title":"...","steps":["step 1","step 2","step 3"],"recommendations":["rec 1","rec 2","rec 3"],"encouragement":"..."} — title is a kind 4-7 word plan name, steps are 3 small concrete actions for TODAY (each under 18 words, at least one done WITH the buddy, public places only), recommendations are 3 short personalised suggestions: one interest-based group activity or club to try this week, one good question to ask a local, and one small social move — each under 16 words and starting with an emoji (⭕, 💬, 🤝, 🎨, ⚽, 💻, 🎵, 🍲 or 📚), encouragement is one warm sentence mentioning ${name.split(" ")[0]}. Only valid JSON.`;
       try {
         const r = await fetch("https://api.groq.com/openai/v1/chat/completions", { method: "POST",
           headers: { Authorization: `Bearer ${env.GROQ_API_KEY}`, "Content-Type": "application/json" },
@@ -66,7 +66,7 @@ export default {
         const content = String(((data.choices || [])[0] || {}).message?.content || "").trim();
         const m = content.match(/\{[\s\S]*\}/);
         if (m) { const parsed = JSON.parse(m[0]);
-          if (parsed.title && Array.isArray(parsed.steps)) return json({ ok: true, source: "groq", model: MODEL, title: String(parsed.title).slice(0,90), steps: parsed.steps.slice(0,3).map(x=>String(x).slice(0,160)), encouragement: String(parsed.encouragement||"").slice(0,180) }); }
+          if (parsed.title && Array.isArray(parsed.steps)) return json({ ok: true, source: "groq", model: MODEL, title: String(parsed.title).slice(0,90), steps: parsed.steps.slice(0,3).map(x=>String(x).slice(0,160)), recommendations: Array.isArray(parsed.recommendations)?parsed.recommendations.slice(0,3).map(x=>String(x).slice(0,150)):[], encouragement: String(parsed.encouragement||"").slice(0,180) }); }
         return json({ ok: false, error: "ai_bad_format" }, 502);
       } catch { return json({ ok: false, error: "ai_unavailable" }, 502); }
     }

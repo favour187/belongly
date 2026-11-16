@@ -229,7 +229,7 @@ footer{color:var(--muted);font-size:.87rem;border-top:1px solid var(--line);marg
         <div style="background:#f0fdfa;border:1.5px solid #99f6e4;border-radius:14px;padding:.9rem;margin-top:.9rem">
           <div style="display:flex;gap:.7rem;align-items:center;flex-wrap:wrap">
             <b style="font-size:.95rem">✨ Belongly AI — Today's Welcome Plan</b>
-            <span class="tag">Powered by Groq · Belongly backend</span>
+            <span class="tag">Personalised for you</span>
             <button class="btn small" id="planBtn" style="margin-left:auto">Generate Today's Plan</button>
           </div>
           <div id="planOut" style="margin-top:.6rem"><p class="meta" style="margin:0">One press: AI looks at your profile, your top buddy and your next quest — and plans your day. Try it.</p></div>
@@ -512,7 +512,7 @@ function generateIcebreaker(b,s){
 /* Live AI via /api/icebreaker (Cloudflare Pages Function -> Backboard). Falls back to built-in engine. */
 async function generateWithBackboard(b, s){
   const status=$("mAiStatus"), btn=$("mAiBtn");
-  btn.disabled=true; btn.textContent="✨ Generating…"; status.textContent="Asking the Belongly backend (Groq AI) for a personalised hello…";
+  btn.disabled=true; btn.textContent="✨ Generating…"; status.textContent="Writing a personalised hello for you…";
   const payload={buddyName:b.name,city:b.city,myName:myProfile?myProfile.name:"",language:buddyPhraseLang(b),
     sharedInterests:b.ints.filter(i=>my.ints.includes(i)),score:s.pts};
   const endpoints=["https://belongly-api.favprojects.workers.dev/api/icebreaker","/api/icebreaker"];
@@ -530,9 +530,9 @@ async function generateWithBackboard(b, s){
     if(!d) throw new Error(lastErr||"ai_unavailable");
     $("mMsg").value=d.hello;
     if(d.phrases&&d.phrases.length) $("mPhrases").innerHTML=d.phrases.map(ph=>`<div style="background:#fff;border:1px solid #99f6e4;border-radius:9px;padding:.35rem .6rem"><b>${ph[0]}</b> → ${ph[1]}</div>`).join("");
-    $("mIce").innerHTML=`<b>✨ Groq AI wrote this hello for ${b.name}:</b><br>“${d.hello}”`;
-    status.textContent="✅ Live AI via the Belongly backend (Groq) — review it, edit anything, then Send Hello.";
-    toast("✨ Groq AI generated your hello!");
+    $("mIce").innerHTML=`<b>✨ Your personalised hello for ${b.name}:</b><br>“${d.hello}”`;
+    status.textContent="✅ Your personalised hello is ready — review it, edit anything, then Send Hello.";
+    toast("✨ Your personalised hello is ready!");
   }catch(e){
     status.textContent="Using Belongly's built-in hello — it's ready below and works fully. (The AI backend didn't respond just now.)";
     toast("Built-in hello ready 🌱");
@@ -560,7 +560,7 @@ function renderStepper(doneSet){
 async function generateWelcomePlan(){
   const out=$("planOut"), btn=$("planBtn");
   btn.disabled=true; btn.textContent="✨ Planning…";
-  out.innerHTML=`<p class="meta" style="margin:0">🤔 Belongly AI is thinking — reading your profile, your top match and your journey…</p>`;
+  out.innerHTML=`<p class="meta" style="margin:0">🤔 Reading your profile, your top match and your journey…</p>`;
   const ranked=buddies.map(b=>({...b,s:score(b)})).sort((a,b)=>b.s.pts-a.s.pts);
   const flat=WEEKS.flatMap(w=>w[1].map(q=>q[0]));
   const nextIdx=flat.findIndex((_,i)=>!done.has(i));
@@ -577,7 +577,8 @@ async function generateWelcomePlan(){
     out.innerHTML=`<b style="font-size:1.02rem">${d.title}</b>
       <ol style="margin:.55rem 0 .55rem 1.2rem;display:flex;flex-direction:column;gap:.35rem">${d.steps.map(s=>`<li>${s}</li>`).join("")}</ol>
       <p style="margin:0"><i>${d.encouragement||""}</i></p>
-      <p class="meta" style="margin:.5rem 0 0;font-size:.75rem">✅ Generated live by Groq AI through the Belongly backend — just for you, right now.</p>`;
+      ${(d.recommendations&&d.recommendations.length)?`<div style="margin-top:.7rem"><b style="font-size:.88rem">💡 Recommended for you</b><div style="display:flex;flex-direction:column;gap:.35rem;margin-top:.4rem">${d.recommendations.map(r=>`<span class="tag" style="white-space:normal;text-align:left">${r}</span>`).join("")}</div></div>`:""}
+      `;
     toast("✨ Your AI Welcome Plan is ready!");
   }else{
     out.innerHTML=`<b>Your plan for today (built-in)</b>
@@ -585,6 +586,10 @@ async function generateWelcomePlan(){
       <li>Message ${ranked[0]?ranked[0].name:"your top buddy"} and suggest your next quest: “${payload.nextQuest}”.</li>
       <li>Do it together in a public place — library, school or café.</li>
       <li>End the day by answering one question on Ask a Local. Giving help roots you faster.</li></ol>
+      <div style="margin-top:.7rem"><b style="font-size:.88rem">💡 Recommended for you</b><div style="display:flex;flex-direction:column;gap:.35rem;margin-top:.4rem">
+      <span class="tag" style="white-space:normal;text-align:left">⭕ Based on your interests, try a Connection Circle this week — small groups, public places, instant people.</span>
+      <span class="tag" style="white-space:normal;text-align:left">💬 Ask a Local: “What's one thing every newcomer in ${payload.city} should know in week one?”</span>
+      <span class="tag" style="white-space:normal;text-align:left">🤝 Send one hello today — one real connection beats ten maybes.</span></div></div>
       <p class="meta" style="margin:0;font-size:.75rem">Built-in plan shown — the AI backend didn't respond just now, so nothing blocked you.</p>`;
   }
   btn.disabled=false; btn.textContent="Generate Today's Plan";

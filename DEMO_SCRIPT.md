@@ -10,14 +10,14 @@
 |---|---|---|
 | 0:00 | Dashboard, slow scroll | "One in six people on Earth feels lonely. That's what the World Health Organization reported in 2025 — and teenagers feel it the most. Now add this: 281 million people live outside their birth country, and every year, millions of students change school or city. For all of them, the hardest part is the same — the first thirty days somewhere new, knowing nobody. So I built Belongly. Nobody should have to start over alone." |
 | 0:25 | Point at the Top Buddy Match card + ring | "This is Belongly. The moment you arrive, it finds your people. This is my top buddy match — and this ring isn't decoration. Belongly scored this person for me: same city, shared language, shared interests, free this week. Real reasons, real maths." |
-| 0:40 | Click **Generate Today's Plan** (wait for it to load) | "And this is Belongly AI. Watch — I press one button, and our backend asks Groq AI to plan my day, using my profile, my top buddy, and where I am in my journey. There it is: a personal plan, generated live, just for me. Not a canned demo — that was written for me, right now." |
+| 0:40 | Click **Generate Today's Plan** (wait for it to load) | "And this is Belongly AI. Watch — I press one button, and Belongly AI creates a plan for my day, using my profile, my top buddy, and where I am in my journey. There it is: a personal plan, generated live, just for me. Not a canned demo — that was written for me, right now." |
 | 1:00 | Go to **Find My Buddy**, untick/tick a language or interest | "Here's the matching engine. Every buddy is scored out of one hundred, and I can see exactly why. And watch what happens when I change what I love… every score re-ranks, live. No black box. I choose people, not profiles." |
 | 1:20 | Click **Say Hello** on the top buddy → click **✨ Try a smarter hello (AI)** | "Found someone? Belongly helps you break the ice. One click, and AI writes my first hello — personal, warm, suggesting a safe public meetup. Plus five phrases in their language, so I can greet them properly. I review it, I edit it, I send it. That's connection, started in ten seconds." |
 | 1:40 | Go to **First-30-Days Journey**, tick a quest | "Then Belongly walks with you. The First-Thirty-Days Journey: four weeks of small quests you do with your buddy — find your safe places, master one bus route, teach them a recipe from home. Every quest earns points, and the final quest is writing advice for the next newcomer. Belonging isn't an event. It's a path." |
 | 1:58 | **Ask a Local** (scroll, upvote) → quick **Circles** scroll | "Stuck? Ask a Local — anyone can answer, and today's newcomer becomes tomorrow's local. And Circles turn one buddy into your people: small groups, one shared love, public meetups." |
 | 2:10 | **My Profile** → **People & Connections** (show your card + search your school) | "And this is really me. My name, my school, my city — saved as my profile, so schoolmates and newcomers can find me, connect with me, even add me with a shareable Belongly Code. No fake accounts. Real people." |
 | 2:22 | **Safety & Trust** (quick scroll) | "Because connecting young people demands safety by design: verified buddies, public first meetings, no private data, one-tap report and block." |
-| 2:30 | Back to **Dashboard** | "Belongly runs on a real full stack — a cloud frontend, a dedicated backend service, and Groq AI behind it — all live right now. One in six people feels lonely. Belongly makes sure that in your first thirty days somewhere new… you're never one of them. Nobody should have to start over alone. Thank you." |
+| 2:30 | Back to **Dashboard** | "Belongly runs on a real full stack — a cloud frontend, a dedicated backend service, and AI behind it — all live right now. One in six people feels lonely. Belongly makes sure that in your first thirty days somewhere new… you're never one of them. Nobody should have to start over alone. Thank you." |
 
 ---
 
@@ -41,7 +41,7 @@ One in six people on Earth feels lonely. That's what the World Health Organizati
 
 This is Belongly. The moment you arrive, it finds your people. This is my top buddy match — and this ring isn't decoration. Belongly scored this person for me: same city, shared language, shared interests, free this week. Real reasons, real maths.
 
-And this is Belongly AI. Watch — I press one button, and our backend asks Groq AI to plan my day, using my profile, my top buddy, and where I am in my journey. There it is: a personal plan, generated live, just for me. Not a canned demo — that was written for me, right now.
+And this is Belongly AI. Watch — I press one button, and Belongly AI creates a plan for my day, using my profile, my top buddy, and where I am in my journey. There it is: a personal plan, generated live, just for me. Not a canned demo — that was written for me, right now.
 
 Here's the matching engine. Every buddy is scored out of one hundred, and I can see exactly why. And watch what happens when I change what I love… every score re-ranks, live. No black box. I choose people, not profiles.
 
@@ -55,7 +55,7 @@ And this is really me. My name, my school, my city — saved as my profile, so s
 
 Because connecting young people demands safety by design: verified buddies, public first meetings, no private data, one-tap report and block.
 
-Belongly runs on a real full stack — a cloud frontend, a dedicated backend service, and Groq AI behind it — all live right now. One in six people feels lonely. Belongly makes sure that in your first thirty days somewhere new… you're never one of them. Nobody should have to start over alone. Thank you.
+Belongly runs on a real full stack — a cloud frontend, a dedicated backend service, and AI behind it — all live right now. One in six people feels lonely. Belongly makes sure that in your first thirty days somewhere new… you're never one of them. Nobody should have to start over alone. Thank you.
 
 ## Filming tips
 - Speak slightly slower than feels natural; pause at every full stop.
